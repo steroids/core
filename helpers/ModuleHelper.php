@@ -2,6 +2,7 @@
 
 namespace steroids\core\helpers;
 
+use yii\base\Module;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\helpers\Json;
@@ -88,16 +89,35 @@ class ModuleHelper
             return $dirOrClassOrId;
         } elseif (strpos(realpath($dirOrClassOrId), realpath(STEROIDS_ROOT_DIR)) !== false) {
             $dir = $dirOrClassOrId;
-        } elseif (strpos($dirOrClassOrId, '\\') !== false) {
+        } elseif (is_subclass_of($dirOrClassOrId, Module::class)) {
             $dir = dirname((new \ReflectionClass($dirOrClassOrId))->getFileName());
         } else {
             if (!isset(static::$_modulesCache[STEROIDS_APP_DIR])) {
                 static::findModules(STEROIDS_APP_DIR, STEROIDS_APP_NAMESPACE);
             }
-            foreach (static::$_modulesCache as $modules) {
-                foreach ($modules as $module) {
-                    if ($module['id'] === $dirOrClassOrId) {
-                        return $module;
+            if (strpos($dirOrClassOrId, '\\') !== false) {
+                $dirOrClassOrId = trim($dirOrClassOrId, '\\');
+
+                /** @var ClassFile $finedModule */
+                $finedModule = null;
+                foreach (static::$_modulesCache as $modules) {
+                    foreach ($modules as $module) {
+                        /** @var ClassFile $module */
+                        if (strpos($dirOrClassOrId, trim($module->namespace, '\\')) === 0
+                            && (!$finedModule || strlen($finedModule->namespace) < strlen($module->namespace))
+                        ) {
+                            $finedModule = $module;
+                        }
+                    }
+                }
+                return $finedModule;
+            } else {
+                foreach (static::$_modulesCache as $modules) {
+                    foreach ($modules as $module) {
+                        /** @var ClassFile $module */
+                        if ($module->moduleId === $dirOrClassOrId) {
+                            return $module;
+                        }
                     }
                 }
             }

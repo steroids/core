@@ -8,6 +8,7 @@ use yii\helpers\StringHelper;
  * @property-read string $name
  * @property-read string $dir
  * @property-read string $namespace
+ * @property-read string $metaPath
  * @property-read \ReflectionClass $reflection
  */
 class ClassFile
@@ -45,20 +46,17 @@ class ClassFile
      */
     public $type;
 
-    public static function createByClass($className)
+    public static function createByClass($className, $type)
     {
-        $info = new \ReflectionClass($className);
+        $module = ModuleHelper::resolveModule($className);
+        $alias = '@' . str_replace('\\', '/', StringHelper::dirname($className));
+        $name = StringHelper::basename($className);
         return new static([
-            'path' => $info->getFileName(),
+            'path' => \Yii::getAlias($alias) . "/$name.php",
             'className' => $className,
-        ]);
-    }
-
-    public static function createByNamespace($namespace, $name)
-    {
-        return new static([
-            'path' => \Yii::getAlias('@' . str_replace('\\', '/', $namespace)),
-            'className' => $namespace . '\\' . $name,
+            'moduleId' => $module->moduleId,
+            'moduleDir' => $module->moduleDir,
+            'type' => $type,
         ]);
     }
 
@@ -100,6 +98,11 @@ class ClassFile
     public function getNamespace()
     {
         return StringHelper::dirname($this->className);
+    }
+
+    public function getMetaPath()
+    {
+        return preg_replace('/([^\\\\\/]+)\.php$/', 'meta/${1}Meta.php', $this->path);
     }
 
     /**

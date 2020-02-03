@@ -250,8 +250,8 @@ class Types extends Component
             if (is_subclass_of($className, Model::class) || is_subclass_of($className, FormModel::class)) {
                 /** @type Model $className */
                 $entity = is_subclass_of($className, Model::class)
-                    ? ModelEntity::findOne(ClassFile::createByClass($className))
-                    : FormEntity::findOne(ClassFile::createByClass($className));
+                    ? ModelEntity::findOne(ClassFile::createByClass($className, ClassFile::TYPE_MODEL))
+                    : FormEntity::findOne(ClassFile::createByClass($className, ClassFile::TYPE_FORM));
                 if (!$entity) {
                     $result[$name] = null;
                     continue;
