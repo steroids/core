@@ -2,7 +2,7 @@
 
 namespace steroids\core\base;
 
-use steroids\gii\forms\ModelAttributeEntity;
+use steroids\gii\forms\BackendModelAttributeEntity;
 use yii\base\BaseObject;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
@@ -76,7 +76,7 @@ abstract class Type extends BaseObject
 
 
     /**
-     * @param ModelAttributeEntity $attributeEntity
+     * @param BackendModelAttributeEntity $attributeEntity
      * @param array $item
      * @return array
      */
@@ -86,7 +86,7 @@ abstract class Type extends BaseObject
     }
 
     /**
-     * @param ModelAttributeEntity $attributeEntity
+     * @param BackendModelAttributeEntity $attributeEntity
      * @return array
      */
     public function getItems($attributeEntity)
@@ -110,7 +110,7 @@ abstract class Type extends BaseObject
     }
 
     /**
-     * @param ModelAttributeEntity $attributeEntity
+     * @param BackendModelAttributeEntity $attributeEntity
      * @param string[] $useClasses
      * @return array
      */
@@ -122,7 +122,7 @@ abstract class Type extends BaseObject
     }
 
     /**
-     * @param ModelAttributeEntity $attributeEntity
+     * @param BackendModelAttributeEntity $attributeEntity
      * @return array
      */
     public function giiBehaviors($attributeEntity)
@@ -131,7 +131,7 @@ abstract class Type extends BaseObject
     }
 
     /**
-     * @param ModelAttributeEntity $attributeEntity
+     * @param BackendModelAttributeEntity $attributeEntity
      * @return string|false
      */
     public function giiDbType($attributeEntity)

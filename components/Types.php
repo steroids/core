@@ -24,8 +24,8 @@ use steroids\core\types\RelationType;
 use steroids\core\types\SizeType;
 use steroids\core\types\StringType;
 use steroids\core\types\TextType;
-use steroids\gii\forms\FormEntity;
-use steroids\gii\forms\ModelEntity;
+use steroids\gii\forms\BackendFormEntity;
+use steroids\gii\forms\BackendModelEntity;
 use steroids\gii\helpers\GiiHelper;
 use yii\base\Component;
 use yii\base\Exception;
@@ -250,8 +250,8 @@ class Types extends Component
             if (is_subclass_of($className, Model::class) || is_subclass_of($className, FormModel::class)) {
                 /** @type Model $className */
                 $entity = is_subclass_of($className, Model::class)
-                    ? ModelEntity::findOne(ClassFile::createByClass($className, ClassFile::TYPE_MODEL))
-                    : FormEntity::findOne(ClassFile::createByClass($className, ClassFile::TYPE_FORM));
+                    ? BackendModelEntity::findOne(ClassFile::createByClass($className, ClassFile::TYPE_MODEL))
+                    : BackendFormEntity::findOne(ClassFile::createByClass($className, ClassFile::TYPE_FORM));
                 if (!$entity) {
                     $result[$name] = null;
                     continue;

@@ -6,7 +6,7 @@ use steroids\core\base\Enum;
 use steroids\core\base\FormModel;
 use steroids\core\base\Model;
 use steroids\core\base\Type;
-use steroids\gii\forms\EnumEntity;
+use steroids\gii\forms\BackendBackendEnumEntity;
 use steroids\gii\helpers\GiiHelper;
 use steroids\gii\models\ValueExpression;
 use yii\db\Schema;
@@ -102,7 +102,7 @@ class EnumType extends Type
         $result = parent::getGiiJsMetaItem($attributeEntity, $item, $import);
         $enumClass = $attributeEntity->getCustomProperty(self::OPTION_CLASS_NAME);
         if ($enumClass) {
-            $modelEntity = EnumEntity::findOne($enumClass);
+            $modelEntity = BackendBackendEnumEntity::findOne($enumClass);
             if (file_exists($modelEntity->getMetaJsPath())) {
                 $import[] = 'import ' . $modelEntity->name . 'Meta from \'' . str_replace('\\', '/', $modelEntity->getClassName() . 'Meta') . '\';';
                 $result['enumClassName'] = new JsExpression($modelEntity->metaClass->name);
@@ -154,7 +154,7 @@ class EnumType extends Type
                 'attribute' => self::OPTION_CLASS_NAME,
                 'component' => 'AutoCompleteField',
                 'label' => 'Enum Class',
-                'items' => ArrayHelper::getColumn(EnumEntity::findAll(), 'className'),
+                'items' => ArrayHelper::getColumn(BackendBackendEnumEntity::findAll(), 'className'),
             ]
         ];
     }

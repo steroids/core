@@ -3,7 +3,7 @@
 namespace steroids\core\types;
 
 use steroids\core\base\Model;
-use steroids\gii\forms\ModelAttributeEntity;
+use steroids\gii\forms\BackendModelAttributeEntity;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
 
@@ -27,7 +27,7 @@ class DoubleType extends IntegerType
     }
 
     /**
-     * @param ModelAttributeEntity $attributeEntity
+     * @param BackendModelAttributeEntity $attributeEntity
      * @return string
      */
     public function giiDbType($attributeEntity)
