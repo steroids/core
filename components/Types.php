@@ -213,15 +213,17 @@ class Types extends Component
     protected static function normalizeClassName($names)
     {
         $result = [];
-        foreach ((array)$names as $name) {
-            if (!is_string($name)) {
-                continue;
-            }
+        if ($names) {
+            foreach ((array)$names as $name) {
+                if (!is_string($name)) {
+                    continue;
+                }
 
-            $name = str_replace('\\', '.', $name);
-            $className = trim(str_replace('.', '\\', $name), '.');
-            if (class_exists($className)) {
-                $result[$name] = $className;
+                $name = str_replace('\\', '.', $name);
+                $className = trim(str_replace('.', '\\', $name), '.');
+                if (class_exists($className)) {
+                    $result[$name] = $className;
+                }
             }
         }
         return $result;

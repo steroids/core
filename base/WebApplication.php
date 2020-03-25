@@ -27,7 +27,7 @@ class WebApplication extends Application
             $this->version = trim(file_get_contents($versionFilePath));
         }
 
-        //Yii::setAlias('@bower', Yii::getAlias('@vendor') . '/bower-asset');
+        Yii::setAlias('@bower', Yii::getAlias('@vendor') . '/bower-asset');
 
         parent::bootstrap();
     }

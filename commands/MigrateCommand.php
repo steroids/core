@@ -22,7 +22,7 @@ class MigrateCommand extends MigrateController
         }
 
         $this->scanNamespacesFromModules(\Yii::$app);
-        $this->scanSteroidsNamespaces();
+        //$this->scanSteroidsNamespaces();
 
         return parent::beforeAction($action);
     }
@@ -45,7 +45,7 @@ class MigrateCommand extends MigrateController
     /**
      * Append steroid's modules migration namespaces
      */
-    protected function scanSteroidsNamespaces()
+    /*protected function scanSteroidsNamespaces()
     {
         $steroidsModulesDirectory = dirname(__DIR__) . '/modules';
         foreach(scandir($steroidsModulesDirectory) as $dirName) {
@@ -63,5 +63,5 @@ class MigrateCommand extends MigrateController
             \Yii::setAlias('@' . $namespace, $migrationsDirectory);
             $this->migrationNamespaces[] = $namespace;
         }
-    }
+    }*/
 }

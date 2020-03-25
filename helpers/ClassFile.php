@@ -2,6 +2,7 @@
 
 namespace steroids\core\helpers;
 
+use yii\base\Exception;
 use yii\helpers\StringHelper;
 
 /**
@@ -49,6 +50,10 @@ class ClassFile
     public static function createByClass($className, $type)
     {
         $module = ModuleHelper::resolveModule($className);
+        if (!$module) {
+            throw new Exception('Cannot resolve module by class name: ' . $className);
+        }
+
         $alias = '@' . str_replace('\\', '/', StringHelper::dirname($className));
         $name = StringHelper::basename($className);
         return new static([

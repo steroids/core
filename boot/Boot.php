@@ -62,6 +62,9 @@ class Boot
                             'application/json' => 'yii\web\JsonParser',
                         ],
                     ],
+                    'errorHandler' => [
+                        'errorView' => '@steroids/core/views/error.php',
+                    ],
                 ],
             ],
             $yiiCustom
@@ -162,9 +165,6 @@ class Boot
                 ],
                 'cors' => [
                     'class' => 'steroids\core\components\Cors',
-                ],
-                'errorHandler' => [
-                    'errorView' => '@steroids/core/views/error.php',
                 ],
             ],
         ];

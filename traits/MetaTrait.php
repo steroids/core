@@ -141,7 +141,7 @@ trait MetaTrait
             }
 
             // Standard model logic
-            if (is_callable($name)) {
+            if (is_callable($name) && (!is_string($name) || !function_exists($name))) {
                 $result[$key] = static::anyToFrontend(call_user_func($name, $item));
             } elseif (is_array($name)) {
                 $result[$key] = static::anyToFrontend(ArrayHelper::getValue($item, $key), $name);

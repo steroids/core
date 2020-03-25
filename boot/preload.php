@@ -40,7 +40,8 @@ defined('YII_ENV_TEST') || define('YII_ENV_TEST', YII_ENV === 'test');
 require(STEROIDS_VENDOR_DIR . '/autoload.php');
 ModuleHelper::loadClass(STEROIDS_APP_DIR . '/core/base/Yii.php', 'Yii');
 
-// Set alias to files dir (with generated or uploaded files)
-\Yii::setAlias('@files', STEROIDS_ROOT_DIR . '/' . (!YII_ENV_DEV ? '../' : '') . '/files');
+// Set alias to steroids and files dir (with generated or uploaded files)
+\Yii::setAlias('@steroids', STEROIDS_VENDOR_DIR . '/steroids');
+\Yii::setAlias('@files', STEROIDS_ROOT_DIR . '/' . (!YII_ENV_DEV ? '../' : '') . 'files');
 
 return $customConfig;

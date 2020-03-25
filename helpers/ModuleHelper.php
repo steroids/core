@@ -103,10 +103,14 @@ class ModuleHelper
                 foreach (static::$_modulesCache as $modules) {
                     foreach ($modules as $module) {
                         /** @var ClassFile $module */
-                        if (strpos($dirOrClassOrId, trim($module->namespace, '\\')) === 0
-                            && (!$finedModule || strlen($finedModule->namespace) < strlen($module->namespace))
-                        ) {
-                            $finedModule = $module;
+                        $extendNamespace = (new \ReflectionClass($module->className))->getParentClass()->getNamespaceName();
+                        foreach ([$module->namespace, $extendNamespace] as $namespace) {
+                            if (strpos($dirOrClassOrId, trim($namespace, '\\')) === 0
+                                && (!$finedModule || strlen($finedModule->namespace) < strlen($namespace))
+                            ) {
+                                $finedModule = $module;
+                                break;
+                            }
                         }
                     }
                 }
@@ -132,6 +136,12 @@ class ModuleHelper
                 $namespace = trim($psrNamespace, '\/');
                 $dir = $dir . '/' . trim($psrRelativePath, '\/');
             }
+        }
+
+        // Auto detect namespace for app
+        if ($namespace === null && strpos($dir, STEROIDS_APP_DIR) === 0) {
+            $namespace = str_replace('/', '\\', mb_substr($dir, mb_strlen(STEROIDS_APP_DIR)));
+            $namespace = STEROIDS_APP_NAMESPACE . '\\' . trim($namespace, '\\');
         }
 
         // Find module class
