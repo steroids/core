@@ -61,7 +61,7 @@ class RelationType extends Type
                 return '';
             }
 
-            foreach ($model->getModelLinks(\Yii::$app->user->model) as $url) {
+            foreach ($model->getModelLinks(\Yii::$app->user->identity) as $url) {
                 if (\Yii::$app->siteMap->isAllowAccess($url)) {
                     return Html::a($model->modelLabel, $url, $options);
                 }

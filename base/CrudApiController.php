@@ -128,7 +128,7 @@ abstract class CrudApiController extends Controller
     public function actionView()
     {
         $model = $this->findModel();
-        if (!$model->canView(Yii::$app->user->model)) {
+        if (!$model->canView(Yii::$app->user->identity)) {
             throw new ForbiddenHttpException();
         }
 
@@ -144,7 +144,7 @@ abstract class CrudApiController extends Controller
     public function actionDelete()
     {
         $model = $this->findModel();
-        if (!$model->canDelete(Yii::$app->user->model)) {
+        if (!$model->canDelete(Yii::$app->user->identity)) {
             throw new ForbiddenHttpException();
         }
 
@@ -163,8 +163,8 @@ abstract class CrudApiController extends Controller
     {
         $attributes = $model->attributes();
         $permittedAttributes = $model->isNewRecord
-            ? $model->canCreate(Yii::$app->user->model)
-            : $model->canUpdate(Yii::$app->user->model);
+            ? $model->canCreate(Yii::$app->user->identity)
+            : $model->canUpdate(Yii::$app->user->identity);
         if (!$permittedAttributes) {
             throw new ForbiddenHttpException();
         }
@@ -249,7 +249,7 @@ abstract class CrudApiController extends Controller
     {
         if ($result instanceof BaseSchema || $result instanceof Model) {
             if (Yii::$app->request->get('scope') === SearchModel::SCOPE_PERMISSIONS) {
-                $user = Yii::$app->user->model;
+                $user = Yii::$app->user->identity;
                 $model = $result instanceof BaseSchema ? $result->model : $result;
 
                 $result = array_merge(
