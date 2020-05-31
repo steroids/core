@@ -4,12 +4,19 @@ namespace steroids\core\base;
 
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
 
 /**
  * @package steroids\core\base
  */
 class Module extends \yii\base\Module
 {
+    /**
+     * Models map for customise classes
+     * @var array
+     */
+    public $classesMap;
+
     /**
      * @return static
      * @throws Exception
@@ -47,6 +54,23 @@ class Module extends \yii\base\Module
         parent::init();
 
         $this->initCoreComponents();
+    }
+
+    /**
+     * @param string $className
+     * @param array $config
+     * @return mixed
+     */
+    public static function instantiateClass($className, $config = null)
+    {
+        $module = static::getInstance();
+        if (!empty($module->classesMap)) {
+            $className = rtrim($className, '\\');
+            $className = ArrayHelper::getValue($module->classesMap, $className)
+                ?: ArrayHelper::getValue($module->classesMap, '\\' . $className)
+                ?: $className;
+        }
+        return $config ? new $className($config) : new $className();
     }
 
     protected function initCoreComponents()
