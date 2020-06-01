@@ -19,7 +19,7 @@ $env = $customConfig['env'] ?? 'production';
 unset($customConfig['env']);
 
 // Define cli constants
-if (php_sapi_name() === 'cli') {
+if (STEROIDS_IS_CLI) {
     defined('STDIN') || define('STDIN', fopen('php://stdin', 'r'));
     defined('STDOUT') || define('STDOUT', fopen('php://stdout', 'w'));
 }

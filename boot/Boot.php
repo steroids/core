@@ -37,7 +37,7 @@ class Boot
             static::safeLoadConfig(STEROIDS_APP_DIR . '/config/main.php'),
 
             // Load web/console config
-            static::safeLoadConfig(STEROIDS_APP_DIR . '/config/' . (STEROIDS_IS_CLI && !YII_ENV_TEST ? 'console' : 'web') . '.php'),
+            static::safeLoadConfig(STEROIDS_APP_DIR . '/config/' . (STEROIDS_IS_CLI ? 'console' : 'web') . '.php'),
 
             // Load environment config
             static::safeLoadConfig(STEROIDS_APP_DIR . '/config/env/' . YII_ENV . '.php'),

@@ -15,7 +15,7 @@ class Module extends \yii\base\Module
      * Models map for customise classes
      * @var array
      */
-    public $classesMap;
+    public array $classesMap;
 
     /**
      * @return static
@@ -58,18 +58,29 @@ class Module extends \yii\base\Module
 
     /**
      * @param string $className
-     * @param array $config
-     * @return mixed
+     * @return string
+     * @throws Exception
      */
-    public static function instantiateClass($className, $config = null)
+    public static function resolveClass($className)
     {
         $module = static::getInstance();
         if (!empty($module->classesMap)) {
             $className = rtrim($className, '\\');
             $className = ArrayHelper::getValue($module->classesMap, $className)
                 ?: ArrayHelper::getValue($module->classesMap, '\\' . $className)
-                ?: $className;
+                    ?: $className;
         }
+        return $className;
+    }
+
+    /**
+     * @param string $className
+     * @param array $config
+     * @return mixed
+     */
+    public static function instantiateClass($className, $config = null)
+    {
+        $className = static::resolveClass($className);
         return $config ? new $className($config) : new $className();
     }
 
