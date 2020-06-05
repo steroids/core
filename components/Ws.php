@@ -2,6 +2,8 @@
 
 namespace steroids\core\components;
 
+use steroids\core\base\BaseSchema;
+use steroids\core\base\Model;
 use yii\base\Component;
 use yii\helpers\Json;
 use steroids\auth\UserInterface;
@@ -10,6 +12,14 @@ class Ws extends Component
 {
     const REDIS_KEY_WS_TOKENS = 'tokens';
     const REDIS_EVENT_TOKENS_UPDATE = 'tokens_update';
+    const STREAM_MODEL_PREFIX = 'model:';
+
+    public static function getModelStream($model)
+    {
+        $className = !is_string($model) ? get_class($model) : $model;
+        $className = str_replace('\\', '.', trim($className, '\\'));
+        return static::STREAM_MODEL_PREFIX . $className;
+    }
 
     /**
      * @var bool
@@ -48,6 +58,21 @@ class Ws extends Component
         if (STEROIDS_IS_CLI) {
             echo date('Y-m-d H:i:s') . " Push to WS, stream: $name, event: $event, data: " . Json::encode($data) . "\n";
         }
+    }
+
+    /**
+     * @param Model $model
+     * @param BaseSchema|array $schemaOrFields
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function pushModel($model, $schemaOrFields = null)
+    {
+        $stream = [static::getModelStream($model), $model->primaryKey];
+        $data = is_string($schemaOrFields) && is_subclass_of($schemaOrFields, BaseSchema::class)
+            ? (new $schemaOrFields(['model' => $model]))->toFrontend()
+            : $model->toFrontend($schemaOrFields);
+
+        $this->push($stream, 'update', $data);
     }
 
     /**
