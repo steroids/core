@@ -14,7 +14,7 @@ use tests\data\models\PhotoFoo;
 
 class ModelRelationsTest extends TestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         $appDir = __DIR__ . '/../data/modules';
         $namespace = 'tests\\data\\modules';
@@ -43,7 +43,7 @@ class ModelRelationsTest extends TestCase
         ')->execute();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         \Yii::$app = null;
     }
@@ -554,7 +554,7 @@ class ModelRelationsTest extends TestCase
         ], $category->getErrors());
     }
 
-    protected function createPhoto($fileName = null)
+    protected function createPhoto($fileName = null) : Photo
     {
         $photo = new Photo([
             'fileName' => $fileName ?? (string) microtime(true),

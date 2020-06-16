@@ -7,6 +7,8 @@ use yii\base\BaseObject;
 
 class TestWebUser extends BaseObject
 {
+    const DEFAULT_ROLE = 'user';
+
     public $isLogin = false;
     public $id;
     public $password;
@@ -38,5 +40,10 @@ class TestWebUser extends BaseObject
     public function getModel()
     {
         return User::findOne(['id' => $this->id]);
+    }
+
+    public function getDefaultRole()
+    {
+        return static::DEFAULT_ROLE;
     }
 }

@@ -27,7 +27,7 @@ trait ModuleProvidersTrait {
         }
         if (is_array($this->providers[$name])) {
             $this->providers[$name] = \Yii::createObject(array_merge(
-                ['className' => ArrayHelper::getValue($this->providersClasses, $name)],
+                ['class' => ArrayHelper::getValue($this->providersClasses, $name)],
                 $this->providers[$name],
                 ['name' => $name]
             ));
