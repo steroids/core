@@ -4,11 +4,14 @@ namespace steroids\core\types;
 
 use steroids\core\base\Type;
 use steroids\core\validators\ExtBooleanValidator;
+use Yii;
 use yii\db\Schema;
 
 class BooleanType extends Type
 {
     public $formatter = 'boolean';
+
+    const ATTRIBUTE_NAME = 'boolean';
 
     /**
      * @inheritdoc
@@ -36,11 +39,11 @@ class BooleanType extends Type
                 'items' => [
                     [
                         'id' => 1,
-                        'label' => \Yii::t('steroids', 'Да')
+                        'label' => Yii::t('steroids', 'Да')
                     ],
                     [
                         'id' => 0,
-                        'label' => \Yii::t('steroids', 'Нет')
+                        'label' => Yii::t('steroids', 'Нет')
                     ],
                 ],
                 'showReset' => true,

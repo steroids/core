@@ -4,15 +4,16 @@ namespace steroids\core\types;
 
 use steroids\core\base\Model;
 use steroids\core\base\Type;
-use steroids\gii\models\ModelMetaClass;
+use Yii;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\web\JsExpression;
 
 class RelationType extends Type
 {
     const OPTION_RELATION_NAME = 'relationName';
+
+    const ATTRIBUTE_NAME = 'relation';
 
     /**
      * @inheritdoc
@@ -61,8 +62,8 @@ class RelationType extends Type
                 return '';
             }
 
-            foreach ($model->getModelLinks(\Yii::$app->user->identity) as $url) {
-                if (\Yii::$app->siteMap->isAllowAccess($url)) {
+            foreach ($model->getModelLinks(Yii::$app->user->identity) as $url) {
+                if (Yii::$app->siteMap->isAllowAccess($url)) {
                     return Html::a($model->modelLabel, $url, $options);
                 }
             }

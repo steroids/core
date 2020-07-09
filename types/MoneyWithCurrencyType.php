@@ -2,11 +2,14 @@
 
 namespace steroids\core\types;
 
+use steroids\gii\models\MetaItem;
 use yii\db\Schema;
 
 class MoneyWithCurrencyType extends CategorizedStringType
 {
     public $currencyEnum;
+
+    const ATTRIBUTE_NAME = 'moneyWithCurrency';
 
     /**
      * @inheritdoc

@@ -9,6 +9,8 @@ class CategorizedStringType extends EnumType
 {
     const OPTION_REF_ATTRIBUTE = 'refAttribute';
 
+    const ATTRIBUTE_NAME = 'categorizedString';
+
     /**
      * @inheritdoc
      */

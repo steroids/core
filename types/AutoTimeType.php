@@ -8,6 +8,8 @@ class AutoTimeType extends DateTimeType
 {
     const OPTION_TOUCH_ON_UPDATE = 'touchOnUpdate';
 
+    const ATTRIBUTE_NAME = 'autoTime';
+
     /**
      * @inheritdoc
      */

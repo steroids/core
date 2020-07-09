@@ -4,6 +4,7 @@ namespace steroids\core\types;
 
 use steroids\core\base\Model;
 use steroids\gii\forms\BackendModelAttributeEntity;
+use Yii;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
 
@@ -12,6 +13,8 @@ class DoubleType extends IntegerType
     const OPTION_SCALE = 'scale';
 
     public $formatter = null;
+
+    const ATTRIBUTE_NAME = 'double';
 
     /**
      * @param Model $model
@@ -23,7 +26,7 @@ class DoubleType extends IntegerType
     public function renderValue($model, $attribute, $item, $options)
     {
         $scale = ArrayHelper::getValue($item, self::OPTION_SCALE) ?: 2;
-        return \Yii::$app->formatter->asDecimal($model->$attribute, $scale);
+        return Yii::$app->formatter->asDecimal($model->$attribute, $scale);
     }
 
     /**
@@ -33,7 +36,7 @@ class DoubleType extends IntegerType
     public function giiDbType($attributeEntity)
     {
         $scale = ArrayHelper::getValue($attributeEntity->customProperties, self::OPTION_SCALE) ?: 2;
-        return (string)\Yii::$app->db->schema->createColumnSchemaBuilder(Schema::TYPE_DECIMAL, [19, $scale]);
+        return (string)Yii::$app->db->schema->createColumnSchemaBuilder(Schema::TYPE_DECIMAL, [19, $scale]);
     }
 
     /**

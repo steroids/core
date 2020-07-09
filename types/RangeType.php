@@ -3,6 +3,8 @@
 namespace steroids\core\types;
 
 use steroids\core\base\Type;
+use steroids\gii\models\MetaItem;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 class RangeType extends Type
@@ -14,6 +16,8 @@ class RangeType extends Type
     const RANGE_POSITION_END = 'end';
 
     public $template = '{start} — {end}';
+
+    const ATTRIBUTE_NAME = 'range';
 
     /**
      * @inheritdoc
@@ -41,8 +45,8 @@ class RangeType extends Type
         $refAttribute = ArrayHelper::remove($item, self::OPTION_REF_ATTRIBUTE);
         if ($refAttribute) {
             return strtr($this->template, [
-                '{start}' => \Yii::$app->types->getType($subAppType)->renderValue($model, $attribute, $item, $options),
-                '{end}' => \Yii::$app->types->getType($subAppType)->renderValue($model, $refAttribute, $item, $options),
+                '{start}' => Yii::$app->types->getType($subAppType)->renderValue($model, $attribute, $item, $options),
+                '{end}' => Yii::$app->types->getType($subAppType)->renderValue($model, $refAttribute, $item, $options),
             ]);
         }
 
@@ -73,7 +77,7 @@ class RangeType extends Type
      */
     public function giiDbType($attributeEntity)
     {
-        return \Yii::$app->types->getType($attributeEntity->subAppType)->giiDbType($attributeEntity);
+        return Yii::$app->types->getType($attributeEntity->subAppType)->giiDbType($attributeEntity);
     }
 
     /**
@@ -81,7 +85,7 @@ class RangeType extends Type
      */
     public function giiBehaviors($attributeEntity)
     {
-        return \Yii::$app->types->getType($attributeEntity->subAppType)->giiBehaviors($attributeEntity);
+        return Yii::$app->types->getType($attributeEntity->subAppType)->giiBehaviors($attributeEntity);
     }
 
     /**
@@ -89,7 +93,7 @@ class RangeType extends Type
      */
     public function giiRules($attributeEntity, &$useClasses = [])
     {
-        return \Yii::$app->types->getType($attributeEntity->subAppType)->giiRules($attributeEntity, $useClasses);
+        return Yii::$app->types->getType($attributeEntity->subAppType)->giiRules($attributeEntity, $useClasses);
     }
 
     /**

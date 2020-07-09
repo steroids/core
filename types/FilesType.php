@@ -2,12 +2,14 @@
 
 namespace steroids\core\types;
 
-use steroids\modules\file\models\File;
+use steroids\file\models\File;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 class FilesType extends RelationType
 {
+    const ATTRIBUTE_NAME = 'files';
+
     /**
      * @inheritdoc
      */

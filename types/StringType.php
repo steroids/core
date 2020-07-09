@@ -3,7 +3,6 @@
 namespace steroids\core\types;
 
 use steroids\core\base\Type;
-use steroids\gii\models\MetaItem;
 use steroids\gii\models\ValueExpression;
 use steroids\core\validators\WordsValidator;
 use yii\db\Schema;
@@ -16,6 +15,8 @@ class StringType extends Type
 
     const TYPE_TEXT = 'text';
     const TYPE_WORDS = 'words';
+
+    const ATTRIBUTE_NAME = 'string';
 
     /**
      * @inheritdoc

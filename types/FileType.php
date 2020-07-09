@@ -3,14 +3,15 @@
 namespace steroids\core\types;
 
 use steroids\core\base\Type;
-use steroids\modules\file\models\File;
+use steroids\file\models\File;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 class FileType extends Type
 {
+    const ATTRIBUTE_NAME = 'file';
+
     /**
      * @inheritdoc
      */

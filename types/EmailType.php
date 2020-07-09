@@ -9,6 +9,8 @@ class EmailType extends Type
 {
     public $formatter = 'email';
 
+    const ATTRIBUTE_NAME = 'email';
+
     /**
      * @inheritdoc
      */

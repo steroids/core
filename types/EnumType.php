@@ -7,7 +7,6 @@ use steroids\core\base\FormModel;
 use steroids\core\base\Model;
 use steroids\core\base\Type;
 use steroids\gii\forms\BackendEnumEntity;
-use steroids\gii\helpers\GiiHelper;
 use steroids\gii\models\ValueExpression;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
@@ -18,6 +17,8 @@ use yii\web\JsExpression;
 class EnumType extends Type
 {
     const OPTION_CLASS_NAME = 'enumClassName';
+
+    const ATTRIBUTE_NAME = 'enum';
 
     /**
      * @inheritdoc

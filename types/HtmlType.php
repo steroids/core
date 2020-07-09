@@ -9,6 +9,8 @@ class HtmlType extends Type
 {
     public $formatter = 'raw';
 
+    const ATTRIBUTE_NAME = 'html';
+
     /**
      * @inheritdoc
      */

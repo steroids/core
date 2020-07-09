@@ -9,6 +9,8 @@ class IntegerType extends Type
 {
     public $formatter = 'integer';
 
+    const ATTRIBUTE_NAME = 'integer';
+
     /**
      * @inheritdoc
      */

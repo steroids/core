@@ -19,6 +19,8 @@ class AddressType extends Type
     const TYPE_LONGITUDE = 'longitude';
     const TYPE_LATITUDE = 'latitude';
 
+    const ATTRIBUTE_NAME = 'address';
+
     /**
      * @inheritdoc
      */

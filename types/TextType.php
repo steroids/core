@@ -9,6 +9,8 @@ class TextType extends Type
 {
     public $formatter = 'ntext';
 
+    const ATTRIBUTE_NAME = 'text';
+
     /**
      * @inheritdoc
      */

@@ -3,12 +3,15 @@
 namespace steroids\core\types;
 
 use steroids\core\base\Type;
+use Yii;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
 
 class DateType extends Type
 {
     const OPTION_FORMAT = 'format';
+
+    const ATTRIBUTE_NAME = 'date';
 
     /**
      * @inheritdoc
@@ -44,7 +47,7 @@ class DateType extends Type
     public function renderValue($model, $attribute, $item, $options = [])
     {
         $format = ArrayHelper::remove($item, self::OPTION_FORMAT);
-        return \Yii::$app->formatter->asDate($model->$attribute, $format);
+        return Yii::$app->formatter->asDate($model->$attribute, $format);
     }
 
     /**

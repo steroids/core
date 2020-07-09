@@ -6,6 +6,8 @@ use steroids\core\base\Enum;
 
 class EnumListType extends EnumType
 {
+    const ATTRIBUTE_NAME = 'enumList';
+
     /**
      * @inheritdoc
      */

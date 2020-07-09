@@ -11,6 +11,8 @@ class MoneyType extends Type
 
     public $formatter = 'currency';
 
+    const ATTRIBUTE_NAME = 'money';
+
     /**
      * @inheritdoc
      */

@@ -8,6 +8,8 @@ class SizeType extends Type
 {
     public $formatter = 'shortSize';
 
+    const ATTRIBUTE_NAME = 'size';
+
     /**
      * @inheritdoc
      */

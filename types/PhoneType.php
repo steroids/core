@@ -7,6 +7,8 @@ use yii\db\Schema;
 
 class PhoneType extends Type
 {
+    const ATTRIBUTE_NAME = 'phone';
+
     /**
      * @inheritdoc
      */

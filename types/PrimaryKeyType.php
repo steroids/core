@@ -7,6 +7,8 @@ use yii\db\Schema;
 
 class PrimaryKeyType extends Type
 {
+    const ATTRIBUTE_NAME = 'primaryKey';
+
     /**
      * @inheritdoc
      */

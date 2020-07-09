@@ -10,6 +10,8 @@ class PasswordType extends Type
     public $min = YII_ENV_DEV ? 1 : 3;
     public $max = 255;
 
+    const ATTRIBUTE_NAME = 'password';
+
     /**
      * @inheritdoc
      */

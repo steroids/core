@@ -4,10 +4,11 @@ namespace steroids\core\types;
 
 use steroids\core\base\Type;
 use yii\db\Schema;
-use yii\helpers\ArrayHelper;
 
 class TimeType extends Type
 {
+    const ATTRIBUTE_NAME = 'time';
+
     /**
      * @inheritdoc
      */
