@@ -11,7 +11,10 @@ class BooleanType extends Type
 {
     public $formatter = 'boolean';
 
-    const ATTRIBUTE_NAME = 'boolean';
+    public function getPhpType()
+    {
+        return static::PHP_BOOLEAN_TYPE;
+    }
 
     /**
      * @inheritdoc

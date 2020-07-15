@@ -9,7 +9,10 @@ class IntegerType extends Type
 {
     public $formatter = 'integer';
 
-    const ATTRIBUTE_NAME = 'integer';
+    public function getPhpType()
+    {
+        return static::PHP_INTEGER_TYPE;
+    }
 
     /**
      * @inheritdoc

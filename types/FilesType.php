@@ -8,7 +8,10 @@ use yii\helpers\Html;
 
 class FilesType extends RelationType
 {
-    const ATTRIBUTE_NAME = 'files';
+    public function getPhpType()
+    {
+        return static::PHP_ARRAY_TYPE;
+    }
 
     /**
      * @inheritdoc

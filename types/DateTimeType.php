@@ -8,7 +8,10 @@ use yii\helpers\ArrayHelper;
 
 class DateTimeType extends DateType
 {
-    const ATTRIBUTE_NAME = 'dateTime';
+    public function getPhpType()
+    {
+        return static::PHP_STRING_TYPE;
+    }
 
     /**
      * @inheritdoc

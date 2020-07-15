@@ -14,7 +14,10 @@ class DoubleType extends IntegerType
 
     public $formatter = null;
 
-    const ATTRIBUTE_NAME = 'double';
+    public function getPhpType()
+    {
+        return static::PHP_FLOAT_TYPE;
+    }
 
     /**
      * @param Model $model

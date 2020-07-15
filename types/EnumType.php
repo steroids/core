@@ -18,7 +18,10 @@ class EnumType extends Type
 {
     const OPTION_CLASS_NAME = 'enumClassName';
 
-    const ATTRIBUTE_NAME = 'enum';
+    public function getPhpType()
+    {
+        return static::PHP_ARRAY_TYPE;
+    }
 
     /**
      * @inheritdoc

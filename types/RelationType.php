@@ -13,7 +13,10 @@ class RelationType extends Type
 {
     const OPTION_RELATION_NAME = 'relationName';
 
-    const ATTRIBUTE_NAME = 'relation';
+    public function getPhpType()
+    {
+        return static::PHP_ARRAY_TYPE;
+    }
 
     /**
      * @inheritdoc

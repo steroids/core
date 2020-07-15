@@ -8,7 +8,10 @@ class SizeType extends Type
 {
     public $formatter = 'shortSize';
 
-    const ATTRIBUTE_NAME = 'size';
+    public function getPhpType()
+    {
+        return static::PHP_INTEGER_TYPE;
+    }
 
     /**
      * @inheritdoc

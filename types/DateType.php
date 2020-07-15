@@ -11,7 +11,10 @@ class DateType extends Type
 {
     const OPTION_FORMAT = 'format';
 
-    const ATTRIBUTE_NAME = 'date';
+    public function getPhpType()
+    {
+        return static::PHP_STRING_TYPE;
+    }
 
     /**
      * @inheritdoc

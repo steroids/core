@@ -9,7 +9,10 @@ class HtmlType extends Type
 {
     public $formatter = 'raw';
 
-    const ATTRIBUTE_NAME = 'html';
+    public function getPhpType()
+    {
+        return static::PHP_STRING_TYPE;
+    }
 
     /**
      * @inheritdoc

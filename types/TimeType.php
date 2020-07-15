@@ -7,7 +7,10 @@ use yii\db\Schema;
 
 class TimeType extends Type
 {
-    const ATTRIBUTE_NAME = 'time';
+    public function getPhpType()
+    {
+        return static::PHP_STRING_TYPE;
+    }
 
     /**
      * @inheritdoc

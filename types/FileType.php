@@ -10,7 +10,10 @@ use yii\helpers\Html;
 
 class FileType extends Type
 {
-    const ATTRIBUTE_NAME = 'file';
+    public function getPhpType()
+    {
+        return static::PHP_INTEGER_TYPE;
+    }
 
     /**
      * @inheritdoc

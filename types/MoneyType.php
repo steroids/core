@@ -11,7 +11,10 @@ class MoneyType extends Type
 
     public $formatter = 'currency';
 
-    const ATTRIBUTE_NAME = 'money';
+    public function getPhpType()
+    {
+        return static::PHP_FLOAT_TYPE;
+    }
 
     /**
      * @inheritdoc

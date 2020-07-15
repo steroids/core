@@ -17,7 +17,10 @@ class RangeType extends Type
 
     public $template = '{start} — {end}';
 
-    const ATTRIBUTE_NAME = 'range';
+    public function getPhpType()
+    {
+        return static::PHP_ARRAY_TYPE;
+    }
 
     /**
      * @inheritdoc

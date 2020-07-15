@@ -6,7 +6,10 @@ use steroids\core\base\Enum;
 
 class EnumListType extends EnumType
 {
-    const ATTRIBUTE_NAME = 'enumList';
+    public function getPhpType()
+    {
+        return static::PHP_ARRAY_TYPE;
+    }
 
     /**
      * @inheritdoc

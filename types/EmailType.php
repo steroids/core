@@ -9,7 +9,10 @@ class EmailType extends Type
 {
     public $formatter = 'email';
 
-    const ATTRIBUTE_NAME = 'email';
+    public function getPhpType()
+    {
+        return static::PHP_STRING_TYPE;
+    }
 
     /**
      * @inheritdoc

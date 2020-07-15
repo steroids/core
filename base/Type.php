@@ -15,6 +15,17 @@ abstract class Type extends BaseObject
     public $name;
     public $formatter;
 
+    const PHP_INTEGER_TYPE = 'int';
+    const PHP_FLOAT_TYPE = 'float';
+    const PHP_STRING_TYPE = 'string';
+    const PHP_BOOLEAN_TYPE = 'bool';
+    const PHP_ARRAY_TYPE = 'array';
+
+    /**
+     * @return string
+     */
+    abstract public function getPhpType();
+
     /**
      * @param Model $model
      * @param string $attribute

@@ -16,7 +16,10 @@ class StringType extends Type
     const TYPE_TEXT = 'text';
     const TYPE_WORDS = 'words';
 
-    const ATTRIBUTE_NAME = 'string';
+    public function getPhpType()
+    {
+        return static::PHP_STRING_TYPE;
+    }
 
     /**
      * @inheritdoc

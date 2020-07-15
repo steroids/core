@@ -9,7 +9,10 @@ class MoneyWithCurrencyType extends CategorizedStringType
 {
     public $currencyEnum;
 
-    const ATTRIBUTE_NAME = 'moneyWithCurrency';
+    public function getPhpType()
+    {
+        return static::PHP_FLOAT_TYPE;
+    }
 
     /**
      * @inheritdoc

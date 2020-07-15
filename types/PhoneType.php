@@ -7,7 +7,10 @@ use yii\db\Schema;
 
 class PhoneType extends Type
 {
-    const ATTRIBUTE_NAME = 'phone';
+    public function getPhpType()
+    {
+        return static::PHP_STRING_TYPE;
+    }
 
     /**
      * @inheritdoc

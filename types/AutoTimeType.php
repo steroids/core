@@ -8,7 +8,10 @@ class AutoTimeType extends DateTimeType
 {
     const OPTION_TOUCH_ON_UPDATE = 'touchOnUpdate';
 
-    const ATTRIBUTE_NAME = 'autoTime';
+    public function getPhpType()
+    {
+        return static::PHP_STRING_TYPE;
+    }
 
     /**
      * @inheritdoc
