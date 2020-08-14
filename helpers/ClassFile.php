@@ -2,6 +2,8 @@
 
 namespace steroids\core\helpers;
 
+use ReflectionClass;
+use ReflectionException;
 use yii\base\Exception;
 use yii\helpers\StringHelper;
 
@@ -10,7 +12,7 @@ use yii\helpers\StringHelper;
  * @property-read string $dir
  * @property-read string $namespace
  * @property-read string $metaPath
- * @property-read \ReflectionClass $reflection
+ * @property-read ReflectionClass $reflection
  */
 class ClassFile
 {
@@ -31,6 +33,15 @@ class ClassFile
      * @var string
      */
     public $moduleDir;
+
+    public function fields()
+    {
+        return [
+            'className',
+            'type',
+            'namespace',
+        ];
+    }
 
     /**
      * @var string
@@ -111,13 +122,13 @@ class ClassFile
     }
 
     /**
-     * @return \ReflectionClass
-     * @throws \ReflectionException
+     * @return ReflectionClass
+     * @throws ReflectionException
      */
     public function getReflection()
     {
         if (!$this->_reflection) {
-            $this->_reflection = new \ReflectionClass($this->className);
+            $this->_reflection = new ReflectionClass($this->className);
         }
         return $this->_reflection;
     }
