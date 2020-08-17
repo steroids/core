@@ -130,7 +130,7 @@ class Boot
                 ],
                 'assetManager' => [
                     'bundles' => false,
-                    'basePath' => '@files/assets',
+                    'basePath' => YII_ENV_DEV ? '@webroot/assets' : '@files/assets',
                 ],
                 'cache' => [
                     'class' => 'yii\caching\FileCache',

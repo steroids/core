@@ -13,6 +13,21 @@ abstract class CrudApiController extends Controller
     public static $searchModelClass;
     public static $viewSchema;
 
+    public static function modelClass()
+    {
+        return static::$modelClass;
+    }
+
+    public static function searchModelClass()
+    {
+        return static::$searchModelClass;
+    }
+
+    public static function viewSchema()
+    {
+        return static::$viewSchema;
+    }
+
     /**
      * @param $baseUrl
      * @param array $custom
@@ -22,7 +37,7 @@ abstract class CrudApiController extends Controller
     public static function apiMapCrud($baseUrl, $custom = [])
     {
         /** @var Model $modelClass */
-        $modelClass = static::$modelClass;
+        $modelClass = static::modelClass();
         $idParam = $modelClass::getRequestParamName();
         $controls = static::controls();
 
@@ -74,6 +89,9 @@ abstract class CrudApiController extends Controller
         );
     }
 
+    /**
+     * @return string[]
+     */
     public static function controls()
     {
         return [
@@ -86,11 +104,25 @@ abstract class CrudApiController extends Controller
         ];
     }
 
+    /**
+     * @return array|null
+     */
     public function fields()
     {
         return null;
     }
 
+    /**
+     * @return array|null
+     */
+    public function detailFields()
+    {
+        return $this->fields();
+    }
+
+    /**
+     * @return SearchModel
+     */
     public function actionIndex()
     {
         $searchModel = $this->createSearch();
@@ -98,23 +130,38 @@ abstract class CrudApiController extends Controller
         return $searchModel;
     }
 
+    /**
+     * @return array|Model
+     * @throws ForbiddenHttpException
+     */
     public function actionCreate()
     {
         /** @var Model $model */
-        $model = new static::$modelClass();
+        $modelClass = static::modelClass();
+        $model = new $modelClass();
         return $this->actionSave($model, Yii::$app->request->post());
     }
 
+    /**
+     * @return array|Model
+     * @throws ForbiddenHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
     public function actionUpdate()
     {
         $model = $this->findModel();
         return $this->actionSave($model, Yii::$app->request->post());
     }
 
+    /**
+     * @return array
+     * @throws ForbiddenHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
     public function actionUpdateBatch()
     {
         /** @var Model $modelClass */
-        $modelClass = static::$modelClass;
+        $modelClass = static::modelClass();
         $primaryKey = $modelClass::primaryKey()[0];
 
         $result = [];
@@ -125,6 +172,11 @@ abstract class CrudApiController extends Controller
         return $result;
     }
 
+    /**
+     * @return mixed|Model|null
+     * @throws ForbiddenHttpException
+     * @throws \yii\web\NotFoundHttpException
+     */
     public function actionView()
     {
         $model = $this->findModel();
@@ -132,8 +184,9 @@ abstract class CrudApiController extends Controller
             throw new ForbiddenHttpException();
         }
 
-        if (static::$viewSchema) {
-            $result = new static::$viewSchema(['model' => $model]);
+        $viewSchema = static::viewSchema();
+        if ($viewSchema) {
+            $result = new $viewSchema(['model' => $model]);
         } else {
             $result = $model;
         }
@@ -141,6 +194,14 @@ abstract class CrudApiController extends Controller
         return $result;
     }
 
+    /**
+     * @return Model|null
+     * @throws ForbiddenHttpException
+     * @throws \Throwable
+     * @throws \steroids\core\exceptions\ModelDeleteException
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\web\NotFoundHttpException
+     */
     public function actionDelete()
     {
         $model = $this->findModel();
@@ -182,8 +243,9 @@ abstract class CrudApiController extends Controller
         if ($errors = $model->getErrors()) {
             $result = ['errors' => $errors];
         } else {
-            if (static::$viewSchema) {
-                $result = new static::$viewSchema(['model' => $model]);
+            $viewSchema = static::viewSchema();
+            if ($viewSchema) {
+                $result = new $viewSchema(['model' => $model]);
             } else {
                 $result = $model;
             }
@@ -211,7 +273,6 @@ abstract class CrudApiController extends Controller
         $model->save();
     }
 
-
     /**
      * @return Model|null
      * @throws \yii\web\NotFoundHttpException
@@ -219,7 +280,7 @@ abstract class CrudApiController extends Controller
     protected function findModel()
     {
         /** @var Model $modelClass */
-        $modelClass = static::$modelClass;
+        $modelClass = static::modelClass();
 
         // Get primary key from post
         $primaryKey = $modelClass::primaryKey()[0];
@@ -232,14 +293,14 @@ abstract class CrudApiController extends Controller
      */
     protected function createSearch()
     {
-        if (static::$searchModelClass) {
-            $modelClass = static::$searchModelClass;
-            return new $modelClass([
+        $searchModelClass = static::searchModelClass();
+        if ($searchModelClass) {
+            return new $searchModelClass([
                 'fields' => $this->fields(),
             ]);
         } else {
             return new SearchModel([
-                'model' => static::$modelClass,
+                'model' => static::modelClass(),
                 'fields' => $this->fields(),
             ]);
         }
@@ -253,11 +314,11 @@ abstract class CrudApiController extends Controller
                 $model = $result instanceof BaseSchema ? $result->model : $result;
 
                 $result = array_merge(
-                    $result->toFrontend($this->fields(), $user),
+                    $result->toFrontend($this->detailFields(), $user),
                     $model->getPermissions($user)
                 );
             } else {
-                $result = $result->toFrontend($this->fields());
+                $result = $result->toFrontend($this->detailFields());
             }
         }
 

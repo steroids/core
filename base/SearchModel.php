@@ -164,10 +164,11 @@ class SearchModel extends FormModel
 
     public function toFrontend($fields = null, $user = null)
     {
-        $user = $user ?:
-            $this->user ?:
-                (\Yii::$app->has('user') ? \Yii::$app->user->identity : null);
-
+        if ($this->user !== false) {
+            $user = $user ?: $this->user ?: (\Yii::$app->has('user') ? \Yii::$app->user->identity : null);
+        } else {
+            $user = null;
+        }
         $items = $this->getItems($fields, $user);
 
         // Append whole model permissions
