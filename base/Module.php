@@ -8,6 +8,7 @@ use yii\helpers\StringHelper;
 
 /**
  * @package steroids\core\base
+ * @property-read string|null $libraryBasePath
  */
 class Module extends \yii\base\Module
 {
@@ -42,21 +43,6 @@ class Module extends \yii\base\Module
     }
 
     /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        // Layout for admin modules (as submodule in application modules)
-        if ($this->id === 'admin') {
-            $this->layout = '@app/core/admin/layouts/web';
-        }
-
-        parent::init();
-
-        $this->initCoreComponents();
-    }
-
-    /**
      * @param string $className
      * @return string
      * @throws Exception
@@ -82,6 +68,30 @@ class Module extends \yii\base\Module
     {
         $className = static::resolveClass($className);
         return $config ? new $className($config) : new $className();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        // Layout for admin modules (as submodule in application modules)
+        if ($this->id === 'admin') {
+            $this->layout = '@app/core/admin/layouts/web';
+        }
+
+        parent::init();
+
+        $this->initCoreComponents();
+    }
+
+    public function getLibraryBasePath()
+    {
+        $info = (new \ReflectionClass($this))->getParentClass();
+        if ($info !== get_class($this)) {
+            return dirname($info->getFileName());
+        }
+        return null;
     }
 
     protected function initCoreComponents()

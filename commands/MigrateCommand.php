@@ -8,6 +8,7 @@ use yii\console\controllers\MigrateController;
 class MigrateCommand extends MigrateController
 {
     public $migrationPath = null;
+    protected $migrationNamespaceExtends = [];
 
     public function beforeAction($action)
     {
@@ -22,7 +23,6 @@ class MigrateCommand extends MigrateController
         }
 
         $this->scanNamespacesFromModules(\Yii::$app);
-        //$this->scanSteroidsNamespaces();
 
         return parent::beforeAction($action);
     }
@@ -31,10 +31,28 @@ class MigrateCommand extends MigrateController
     {
         foreach ($module->modules as $module) {
             $info = new \ReflectionClass(is_object($module) ? get_class($module) : $module['class']);
-            $namespace = $info->getNamespaceName() . '\\migrations';
 
-            $this->migrationNamespaces[] = $namespace;
-            \Yii::setAlias('@' . $namespace, dirname($info->getFileName()) . '/migrations');
+            // App migrations
+            $namespace = $info->getNamespaceName() . '\\migrations';
+            $dir = dirname($info->getFileName()) . '/migrations';
+            if (is_dir($dir)) {
+                $this->migrationNamespaces[] = $namespace;
+                \Yii::setAlias('@' . $namespace, $dir);
+            }
+
+            // Steroids (or other lib) migrations
+            $parentInfo = $info->getParentClass();
+            $libNamespace = $parentInfo->getNamespaceName() . '\\migrations';
+            $libDir = dirname($parentInfo->getFileName()) . '/migrations';
+            if (is_dir($libDir)) {
+                $this->migrationNamespaces[] = $libNamespace;
+                \Yii::setAlias('@' . $libNamespace, $libDir);
+            }
+
+            // Store extend mapping
+            if (is_dir($dir) && is_dir($libDir)) {
+                $this->migrationNamespaceExtends[$namespace] = $libNamespace;
+            }
 
             if ($module instanceof Module) {
                 $this->scanNamespacesFromModules($module);
@@ -42,26 +60,22 @@ class MigrateCommand extends MigrateController
         }
     }
 
-    /**
-     * Append steroid's modules migration namespaces
-     */
-    /*protected function scanSteroidsNamespaces()
+    protected function getMigrationHistory($limit)
     {
-        $steroidsModulesDirectory = dirname(__DIR__) . '/modules';
-        foreach(scandir($steroidsModulesDirectory) as $dirName) {
-            if ($dirName === '.' || $dirName === '..') {
-                continue;
+        $migrations = parent::getMigrationHistory($limit);
+
+        // Append library migrations with same class names
+        foreach (array_keys($migrations) as $name) {
+            $info = new \ReflectionClass($name);
+
+            if (isset($this->migrationNamespaceExtends[$info->getNamespaceName()])) {
+                $extendName = $this->migrationNamespaceExtends[$info->getNamespaceName()] . '\\' . $info->getShortName();
+                if (class_exists($extendName)) {
+                    $migrations[$extendName] = $migrations[$name];
+                }
             }
-
-            $migrationsDirectory = $steroidsModulesDirectory . '/' . $dirName . '/migrations';
-            $namespace = 'steroids\\modules\\' . $dirName . '\\migrations';
-
-            if (!is_dir($migrationsDirectory) || in_array($namespace, $this->migrationNamespaces)) {
-                continue;
-            }
-
-            \Yii::setAlias('@' . $namespace, $migrationsDirectory);
-            $this->migrationNamespaces[] = $namespace;
         }
-    }*/
+
+        return $migrations;
+    }
 }
