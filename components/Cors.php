@@ -12,26 +12,42 @@ class Cors extends Component implements BootstrapInterface
      * @var array set '*'
      * to allow all domains
      */
-    public $allowDomains = [];
+    public array $allowDomains = [];
 
     /**
      * @var array
      * set '*' to allow all headers
      */
-    public $allowHeaders = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'];
+    public array $allowHeaders = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'X-CSRF-Token'];
 
-    public $allowMethods = ['POST', 'GET', 'OPTIONS'];
+    /**
+     * @var string[]
+     */
+    public array $allowMethods = ['POST', 'GET', 'OPTIONS', 'DELETE'];
 
-    public $allowCredentials = null;
-    public $maxAge = 86400;
-    public $exposeHeaders = [];
+    /**
+     * @var bool
+     */
+    public bool $allowCredentials = true;
+    public int $maxAge = 86400;
+    public array $exposeHeaders = [];
 
     public function bootstrap($app)
     {
         if ($this->allowDomains && $app instanceof WebApplication) {
+            $origin = [];
+            foreach ($this->allowDomains as $domain) {
+                if (strpos('://', $domain) === false) {
+                    $origin[] = 'https://' . $domain;
+                    $origin[] = 'http://' . $domain;
+                } else {
+                    $origin[] = $domain;
+                }
+            }
+
             $cors = new \yii\filters\Cors([
                 'cors' => [
-                    'Origin' => $this->allowDomains,
+                    'Origin' => $origin,
                     'Access-Control-Request-Method' => $this->allowMethods,
                     'Access-Control-Request-Headers' => $this->allowHeaders,
                     'Access-Control-Allow-Credentials' => $this->allowCredentials,

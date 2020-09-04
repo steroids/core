@@ -2,6 +2,7 @@
 
 namespace steroids\core\base;
 
+use steroids\auth\UserInterface;
 use steroids\core\traits\RelationSaveTrait;
 use steroids\core\components\AuthManager;
 use steroids\core\exceptions\ModelDeleteException;
@@ -274,7 +275,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param Model $user
+     * @param UserInterface|Model $user
      * @return bool|array
      */
     public function canView($user)
@@ -287,7 +288,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param Model $user
+     * @param UserInterface|Model $user
      * @return bool|array
      */
     public function canCreate($user)
@@ -300,7 +301,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param Model $user
+     * @param UserInterface|Model $user
      * @return bool|array
      */
     public function canUpdate($user)
@@ -315,7 +316,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param Model $user
+     * @param UserInterface|Model $user
      * @return bool
      */
     public function canDelete($user)
@@ -343,7 +344,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param Model $user
+     * @param UserInterface|Model $user
      * @param string $attributeName
      * @return bool
      */
@@ -360,7 +361,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param Model $user
+     * @param UserInterface|Model $user
      * @param string $attributeName
      * @return bool
      */
@@ -377,7 +378,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param Model $user
+     * @param UserInterface|Model $user
      * @param string $attributeName
      * @return bool
      */
@@ -394,7 +395,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param Model $user
+     * @param UserInterface|Model $user
      * @param string $rule
      * @return array|bool of attribute names
      */
