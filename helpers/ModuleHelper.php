@@ -41,6 +41,32 @@ class ModuleHelper
         return static::$_modulesCache[$rootDir];
     }
 
+    public static function findAppModuleClasses($module = null)
+    {
+        if (!$module) {
+            $module = \Yii::$app;
+        }
+
+        $moduleClasses = [];
+        foreach ($module->getModules() as $module) {
+            $children = [];
+            if (is_object($module)) {
+                $moduleClasses[] = $module::className();
+                $children = $module->getModules();
+            } elseif (is_array($module) && isset($module['class'])) {
+                $moduleClasses[] = $module['class'];
+                $children = ArrayHelper::getValue($module, 'modules', []);
+            } elseif (is_string($module)) {
+                $moduleClasses[] = $module;
+            }
+
+            foreach ($children as $subModule) {
+                $moduleClasses[] = [...$moduleClasses, static::findAppModuleClasses($subModule)];
+            }
+        }
+        return $moduleClasses;
+    }
+
     /**
      * @param $module
      * @param $type

@@ -58,12 +58,16 @@ class Boot
             [
                 'components' => [
                     'request' => [
+                        'enableCookieValidation' => false,
                         'parsers' => [
                             'application/json' => 'yii\web\JsonParser',
                         ],
                     ],
                     'errorHandler' => [
                         'errorView' => '@steroids/core/views/error.php',
+                    ],
+                    'user' => [
+                        'class' => 'steroids\auth\components\BearerWebUser',
                     ],
                 ],
             ],
