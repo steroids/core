@@ -12,6 +12,7 @@ use steroids\core\traits\SecurityTrait;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\web\IdentityInterface;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -275,7 +276,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param UserInterface|Model $user
+     * @param UserInterface|IdentityInterface|Model $user
      * @return bool|array
      */
     public function canView($user)
@@ -288,7 +289,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param UserInterface|Model $user
+     * @param UserInterface|IdentityInterface|Model $user
      * @return bool|array
      */
     public function canCreate($user)
@@ -301,7 +302,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param UserInterface|Model $user
+     * @param UserInterface|IdentityInterface|Model $user
      * @return bool|array
      */
     public function canUpdate($user)
@@ -316,7 +317,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param UserInterface|Model $user
+     * @param UserInterface|IdentityInterface|Model $user
      * @return bool
      */
     public function canDelete($user)
@@ -344,7 +345,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param UserInterface|Model $user
+     * @param UserInterface|IdentityInterface|Model $user
      * @param string $attributeName
      * @return bool
      */
@@ -361,7 +362,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param UserInterface|Model $user
+     * @param UserInterface|IdentityInterface|Model $user
      * @param string $attributeName
      * @return bool
      */
@@ -378,7 +379,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param UserInterface|Model $user
+     * @param UserInterface|IdentityInterface|Model $user
      * @param string $attributeName
      * @return bool
      */
@@ -395,7 +396,7 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param UserInterface|Model $user
+     * @param UserInterface|IdentityInterface|Model $user
      * @param string $rule
      * @return array|bool of attribute names
      */
