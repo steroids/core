@@ -151,7 +151,7 @@ class Model extends ActiveRecord
     {
         $model = static::findOne($condition);
         if (!$model) {
-            throw new NotFoundHttpException('Запись не найдена');
+            throw new NotFoundHttpException('Запись не найдена' . (YII_DEBUG ? ' - ' . static::class : ''));
         }
         return $model;
     }

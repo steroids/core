@@ -13,6 +13,7 @@ require_once __DIR__ . '/ClassFile.php';
 class ModuleHelper
 {
     protected static $_modulesCache = [];
+    protected static $_resolvesCache = [];
 
     /**
      * Scan directory to find modules and submodules
@@ -82,21 +83,34 @@ class ModuleHelper
         }
 
         $classes = [];
-        $files = FileHelper::findFiles($module->dir, [
-            'only' => [
-                $folder . '/*.php',
-            ]
-        ]);
-        foreach ($files as $path) {
-            $relativePath = StringHelper::dirname(str_replace($module->dir, '', $path));
-            $namespace = $module->namespace . '\\' . trim(str_replace('/', '\\', $relativePath), '\\');
-            $classes[] = new ClassFile([
-                'moduleId' => $module->moduleId,
-                'moduleDir' => dirname($module->path),
-                'path' => $path,
-                'className' => $namespace . '\\' . StringHelper::basename($path, '.php'),
-                'type' => $type,
-            ]);
+        $modules = [$module];
+        $libModule = static::resolveModule(dirname($module->reflection->getParentClass()->getFileName()));
+        if ($libModule) {
+            $modules[] = $libModule;
+        }
+
+        foreach ($modules as $moduleItem) {
+            $dir = $moduleItem->dir . '/' . $folder;
+            if (!is_dir($dir)) {
+                continue;
+            }
+
+            foreach (scandir($dir) as $fileName) {
+                if (!preg_match('/\.php$/', $fileName)) {
+                    continue;
+                }
+
+                $path = $dir . '/' . $fileName;
+                $relativePath = StringHelper::dirname(str_replace($moduleItem->dir, '', $path));
+                $namespace = $moduleItem->namespace . '\\' . trim(str_replace('/', '\\', $relativePath), '\\');
+                $classes[] = new ClassFile([
+                    'moduleId' => $moduleItem->moduleId,
+                    'moduleDir' => dirname($moduleItem->path),
+                    'path' => $path,
+                    'className' => $namespace . '\\' . StringHelper::basename($path, '.php'),
+                    'type' => $type,
+                ]);
+            }
         }
         return $classes;
     }
@@ -110,10 +124,14 @@ class ModuleHelper
      */
     public static function resolveModule($dirOrClassOrId, $namespace = null, $parentModuleId = null)
     {
+        if (is_string($dirOrClassOrId) && array_key_exists('dirOrClassOrId', static::$_resolvesCache)) {
+            return static::$_resolvesCache[$dirOrClassOrId];
+        }
+
         // Resolve dir by class name or module id
         if ($dirOrClassOrId instanceof ClassFile) {
             return $dirOrClassOrId;
-        } elseif (strpos(realpath($dirOrClassOrId), realpath(STEROIDS_ROOT_DIR)) !== false) {
+        } elseif (strpos(realpath($dirOrClassOrId), realpath(STEROIDS_ROOT_DIR)) !== false || is_dir($dirOrClassOrId)) {
             $dir = $dirOrClassOrId;
         } elseif (is_subclass_of($dirOrClassOrId, Module::class)) {
             $dir = dirname((new \ReflectionClass($dirOrClassOrId))->getFileName());
@@ -155,12 +173,19 @@ class ModuleHelper
         }
 
         // Find dir composer.json
-        if (file_exists("$dir/composer.json")) {
-            $composer = Json::decode(file_get_contents($dir . '/composer.json'));
-            $psr4 = ArrayHelper::getValue($composer, 'autoload.psr-4', []);
-            foreach ($psr4 as $psrNamespace => $psrRelativePath) {
-                $namespace = trim($psrNamespace, '\/');
-                $dir = $dir . '/' . trim($psrRelativePath, '\/');
+        foreach ([$dir, dirname($dir)] as $i => $composerDir) {
+            if (file_exists("$composerDir/composer.json")) {
+                $composer = Json::decode(file_get_contents($composerDir . '/composer.json'));
+                $psr4 = ArrayHelper::getValue($composer, 'autoload.psr-4', []);
+                foreach ($psr4 as $psrNamespace => $psrRelativePath) {
+                    if ($i === 1 && $psrRelativePath !== StringHelper::basename($dir)) {
+                        continue;
+                    }
+
+                    $namespace = trim($psrNamespace, '\/');
+                    $dir = $composerDir . '/' . trim($psrRelativePath, '\/');
+                }
+                break;
             }
         }
 
@@ -173,23 +198,27 @@ class ModuleHelper
         // Find module class
         foreach (scandir($dir) as $file) {
             if (preg_match('/([^\/]+)Module\.php$/', $file, $match)) {
-                $vendorModules[] = $namespace . '\\' . $match[1] . 'Module';
+                //$vendorModules[] = $namespace . '\\' . $match[1] . 'Module';
 
-                $class = $namespace . '\\' . $match[1] . 'Module';
+                //$class = $namespace . '\\' . $match[1] . 'Module';
                 /*if (!is_subclass_of($class, '\steroids\core\base\Module')) {
                     throw new \Exception('Module class `' . $class . '` is not extends from `\steroids\core\base\Module`');
                 }*/
 
-                return new ClassFile([
+                $classFile = new ClassFile([
                     'moduleId' => ($parentModuleId ? $parentModuleId . '.' : '') . lcfirst($match[1]),
                     'moduleDir' => $dir,
                     'path' => "$dir/$file",
                     'className' => $namespace . '\\' . $match[1] . 'Module',
                     'type' => ClassFile::TYPE_MODULE,
                 ]);
+
+                static::$_resolvesCache[$dirOrClassOrId] = $classFile;
+                return $classFile;
             }
         }
 
+        static::$_resolvesCache[$dirOrClassOrId] = null;
         return null;
     }
 
