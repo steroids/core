@@ -20,7 +20,7 @@ class EnumType extends Type
 
     public function getPhpType()
     {
-        return static::PHP_ARRAY_TYPE;
+        return static::PHP_STRING_TYPE;
     }
 
     /**

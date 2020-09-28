@@ -55,7 +55,7 @@ class SearchModel extends FormModel
     public $dataProvider;
 
     /**
-     * @var array
+     * @var object
      */
     public $meta = [];
 
@@ -235,7 +235,7 @@ class SearchModel extends FormModel
      * @param Model $model
      * @return BaseSchema
      */
-    public function createSchema($schema, $model)
+    protected function createSchema($schema, $model)
     {
         return new $schema(['model' => $model]);
     }

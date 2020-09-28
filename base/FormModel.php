@@ -2,11 +2,13 @@
 
 namespace steroids\core\base;
 
+use steroids\auth\UserInterface;
 use steroids\core\traits\MetaTrait;
 use steroids\core\traits\RelationSaveTrait;
 use steroids\core\traits\RelationSimilarTrait;
 use steroids\core\traits\SecurityTrait;
 use yii\base\InvalidConfigException;
+use yii\web\IdentityInterface;
 
 class FormModel extends \yii\base\Model
 {
@@ -23,6 +25,11 @@ class FormModel extends \yii\base\Model
     public function fields()
     {
         return [];
+    }
+
+    public function fieldsSchema()
+    {
+        return null;
     }
 
     /**
@@ -90,5 +97,15 @@ class FormModel extends \yii\base\Model
         }
 
         return $errors;
+    }
+
+    /**
+     * @param string $schema
+     * @param FormModel $model
+     * @return BaseSchema
+     */
+    protected function createSchema($schema, $model)
+    {
+        return new $schema(['model' => $model]);
     }
 }

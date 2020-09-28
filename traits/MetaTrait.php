@@ -163,8 +163,16 @@ trait MetaTrait
      */
     public function toFrontend($fields = null, $user = null)
     {
-        $data = static::anyToFrontend($this, $fields);
-        $model = $this instanceof BaseSchema ? $this->model : $this;
+        $self = $this;
+        if (method_exists($this, 'createSchema') && method_exists($this, 'fieldsSchema')) {
+            $schema = $this->fieldsSchema();
+            if ($schema) {
+                $self = $this->createSchema($schema, $this);
+            }
+        }
+
+        $data = static::anyToFrontend($self, $fields);
+        $model = $self instanceof BaseSchema ? $self->model : $self;
 
         if ($user && $model instanceof Model) {
             $canView = $model->canView($user);
