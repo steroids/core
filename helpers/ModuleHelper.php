@@ -190,9 +190,16 @@ class ModuleHelper
         }
 
         // Auto detect namespace for app
-        if ($namespace === null && strpos($dir, STEROIDS_APP_DIR) === 0) {
-            $namespace = str_replace('/', '\\', mb_substr($dir, mb_strlen(STEROIDS_APP_DIR)));
-            $namespace = STEROIDS_APP_NAMESPACE . '\\' . trim($namespace, '\\');
+        if ($namespace === null) {
+            // Normalize directory separators for the comparison because
+            // paths because paths can match but directory separators may be different
+            $dirNormalized = str_replace('/', '\\', $dir);
+            $steroidsDirNormalized = str_replace('/', '\\', STEROIDS_APP_DIR);
+
+            if (strpos($dirNormalized, $steroidsDirNormalized) === 0) {
+                $namespace = str_replace('/', '\\', mb_substr($dir, mb_strlen(STEROIDS_APP_DIR)));
+                $namespace = STEROIDS_APP_NAMESPACE . '\\' . trim($namespace, '\\');
+            }
         }
 
         // Find module class

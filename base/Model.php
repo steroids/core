@@ -83,17 +83,17 @@ class Model extends ActiveRecord
         }
 
         $result = [];
+
+        $models = $query->all();
+        if (!count($models)) {
+            return $result;
+        }
+
+        $idKey = static::getEnumIdKey($models[0]);
+        $labelKey = static::getEnumLabelKey($models[0]);
+
         foreach ($query->all() as $model)
         {
-            $idKey = $model::primaryKey()[0];
-            $labelKey = $idKey;
-            foreach (['title', 'label', 'name'] as $attribute) {
-                if ($model->canGetProperty($attribute)) {
-                    $labelKey = $attribute;
-                    break;
-                }
-            }
-
             $item = $model->toFrontend(array_merge(
                 [
                     'id' => $idKey,
@@ -106,6 +106,22 @@ class Model extends ActiveRecord
 
         ArrayHelper::multisort($result, 'label');
         return array_values($result);
+    }
+
+    protected static function getEnumIdKey(ActiveRecord $model)
+    {
+        return $model::primaryKey()[0];
+    }
+
+    protected static function getEnumLabelKey(ActiveRecord $model)
+    {
+        foreach (['title', 'label', 'name'] as $attribute) {
+            if ($model->canGetProperty($attribute)) {
+                return $attribute;
+            }
+        }
+
+        return $model::primaryKey()[0];
     }
 
     /**

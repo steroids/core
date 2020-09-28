@@ -2,6 +2,8 @@
 
 namespace steroids\core\base;
 
+use Exception;
+use Yii;
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
 
@@ -25,7 +27,7 @@ abstract class Enum extends BaseObject
 
     /**
      * @param string $id
-     * @throws \Exception if label doesn't exist
+     * @throws Exception if label doesn't exist
      * @return mixed
      */
     public static function getLabel($id)
@@ -36,7 +38,7 @@ abstract class Enum extends BaseObject
 
         $idLabelMap = static::getLabels();
         if (!isset($idLabelMap[$id])) {
-            throw new \Exception('Unknown enum id: `' . $id . '`');
+            throw new Exception('Unknown enum id: `' . $id . '`');
         }
 
         return $idLabelMap[$id];
@@ -91,6 +93,20 @@ abstract class Enum extends BaseObject
         }
 
         return "enum('" . implode("','", $keys) . "')"
-            . ($default ? 'NOT NULL DEFAULT ' . \Yii::$app->db->quoteValue($default) : 'NULL');
+            . ($default ? 'NOT NULL DEFAULT ' . Yii::$app->db->quoteValue($default) : 'NULL');
+    }
+
+    /**
+     * @return string
+     */
+    public static function getRandomKey()
+    {
+        if (!count(static::getLabels())) {
+            return null;
+        }
+
+        $maxIndex = count(static::getLabels()) - 1;
+        $randomIndex = mt_rand(0, $maxIndex);
+        return static::getKeys()[$randomIndex];
     }
 }
