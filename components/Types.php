@@ -53,6 +53,24 @@ use yii\helpers\Html;
  */
 class Types extends Component
 {
+    const AUTO_TIME = 'autoTime';
+    const BOOLEAN = 'boolean';
+    const MONEY = 'money';
+    const DATE_TIME = 'dateTime';
+    const DATE = 'date';
+    const DOUBLE = 'double';
+    const ENUM = 'enum';
+    const FILES = 'files';
+    const FILE = 'file';
+    const HTML = 'html';
+    const INTEGER = 'integer';
+    const PRIMARY_KEY = 'primaryKey';
+    const RANGE = 'range';
+    const RELATION = 'relation';
+    const SIZE = 'size';
+    const STRING = 'string';
+    const TEXT = 'text';
+
     /**
      * @var Type[]
      */
