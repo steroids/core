@@ -16,7 +16,7 @@ class Module extends \yii\base\Module
      * Models map for customise classes
      * @var array
      */
-    public array $classesMap;
+    public array $classesMap = [];
 
     /**
      * @return static

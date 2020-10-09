@@ -160,7 +160,7 @@ class Model extends ActiveRecord
 
     /**
      * @param string|array $condition
-     * @return null|static
+     * @return static
      * @throws NotFoundHttpException
      */
     public static function findOrPanic($condition)
