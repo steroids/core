@@ -53,6 +53,16 @@ class RequestInfo extends BaseObject
         return true;
     }
 
+    /**
+     * @param string $key
+     * @return mixed|null
+     * @throws \Exception
+     */
+    public function getParam(string $key)
+    {
+        return ArrayHelper::getValue($this->params, $key);
+    }
+
     public function toRaw()
     {
         $lines = [];
