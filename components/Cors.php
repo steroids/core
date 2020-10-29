@@ -18,12 +18,27 @@ class Cors extends Component implements BootstrapInterface
      * @var array
      * set '*' to allow all headers
      */
-    public array $allowHeaders = ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'X-CSRF-Token'];
+    public array $allowHeaders = [
+        'Origin',
+        'X-Requested-With',
+        'Content-Type',
+        'Accept',
+        'Authorization',
+        'X-CSRF-Token',
+
+        // For file PUT upload
+        'If-None-Match',
+        'If-Modified-Since',
+        'Cache-Control',
+        'X-Requested-With',
+        'Content-Disposition',
+        'Content-Range',
+    ];
 
     /**
      * @var string[]
      */
-    public array $allowMethods = ['POST', 'GET', 'OPTIONS', 'DELETE'];
+    public array $allowMethods = ['POST', 'PUT', 'GET', 'OPTIONS', 'DELETE'];
 
     /**
      * @var bool
