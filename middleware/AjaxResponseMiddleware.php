@@ -44,55 +44,57 @@ class AjaxResponseMiddleware extends BaseObject
             $contentType = $rawContentType;
         }
 
-        if (($contentType === 'application/json' && isset($request->parsers[$contentType]))
-            || $response->format === Response::FORMAT_JSON
-            || is_array($event->result)
-            || $event->result instanceof \yii\base\Model) {
+        if ($response->format !== Response::FORMAT_RAW) {
+            if (($contentType === 'application/json' && isset($request->parsers[$contentType]))
+                || $response->format === Response::FORMAT_JSON
+                || is_array($event->result)
+                || $event->result instanceof \yii\base\Model) {
 
-            // Detect data provider
-            $data = [];
-            if ($event->result instanceof SearchModel || $event->result instanceof BaseSchema) {
-                $data = $event->result->toFrontend(null, \Yii::$app->user->identity);
-            } elseif ($event->result instanceof Model || $event->result instanceof FormModel) {
-                if ($event->result->hasErrors()) {
-                    $errors = $event->result->getErrors();
-                    $formName = $event->result->formName();
-                    if ($formName) {
-                        $errors = [$formName => $errors];
-                    }
-
-                    $data = ['errors' => $errors];
-                } else {
+                // Detect data provider
+                $data = [];
+                if ($event->result instanceof SearchModel || $event->result instanceof BaseSchema) {
                     $data = $event->result->toFrontend(null, \Yii::$app->user->identity);
-                }
-            } elseif ($event->result instanceof BaseDataProvider) {
-                $data = [
-                    'meta' => null,
-                    'items' => $event->result->models,
-                    'total' => $event->result->totalCount,
-                ];
-            } else {
-                $data = is_array($event->result) ? $event->result : [];
-            }
+                } elseif ($event->result instanceof Model || $event->result instanceof FormModel) {
+                    if ($event->result->hasErrors()) {
+                        $errors = $event->result->getErrors();
+                        $formName = $event->result->formName();
+                        if ($formName) {
+                            $errors = [$formName => $errors];
+                        }
 
-            // Ajax redirect
-            $location = $response->headers->get('Location')
-                ?: $response->headers->get('X-Pjax-Url')
-                    ?: $response->headers->get('X-Redirect');
-            if ($location) {
-                $data['redirectUrl'] = $location;
-                $response->headers->remove('Location');
-                $response->statusCode = 200;
-            } else {
-                // Flashes
-                $session = \Yii::$app->session;
-                $flashes = $session->getAllFlashes(true);
-                if (!empty($flashes)) {
-                    $data['flashes'] = $flashes;
+                        $data = ['errors' => $errors];
+                    } else {
+                        $data = $event->result->toFrontend(null, \Yii::$app->user->identity);
+                    }
+                } elseif ($event->result instanceof BaseDataProvider) {
+                    $data = [
+                        'meta' => null,
+                        'items' => $event->result->models,
+                        'total' => $event->result->totalCount,
+                    ];
+                } else {
+                    $data = is_array($event->result) ? $event->result : [];
                 }
-            }
 
-            $event->result = is_array($data) && empty($data) ? new JsExpression('{}') : $data;
+                // Ajax redirect
+                $location = $response->headers->get('Location')
+                    ?: $response->headers->get('X-Pjax-Url')
+                        ?: $response->headers->get('X-Redirect');
+                if ($location) {
+                    $data['redirectUrl'] = $location;
+                    $response->headers->remove('Location');
+                    $response->statusCode = 200;
+                } else {
+                    // Flashes
+                    $session = \Yii::$app->session;
+                    $flashes = $session->getAllFlashes(true);
+                    if (!empty($flashes)) {
+                        $data['flashes'] = $flashes;
+                    }
+                }
+
+                $event->result = is_array($data) && empty($data) ? new JsExpression('{}') : $data;
+            }
         }
 
         if (is_array($event->result)) {
