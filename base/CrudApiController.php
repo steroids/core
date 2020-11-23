@@ -68,19 +68,19 @@ abstract class CrudApiController extends Controller
                     'update' => [
                         'label' => \Yii::t('steroids', 'Редактирование'),
                         'url' => ['update'],
-                        'urlRule' => "PUT,POST $baseUrl/<$idParam>",
+                        'urlRule' => "PUT,POST $baseUrl/<$idParam:\d>",
                         'visible' => in_array('update', $controls),
                     ],
                     'view' => [
                         'label' => \Yii::t('steroids', 'Просмотр'),
                         'url' => ['view'],
-                        'urlRule' => "GET $baseUrl/<$idParam>",
+                        'urlRule' => "GET $baseUrl/<$idParam:\d>",
                         'visible' => in_array('view', $controls),
                     ],
                     'delete' => [
                         'label' => \Yii::t('steroids', 'Удаление'),
                         'url' => ['delete'],
-                        'urlRule' => "DELETE $baseUrl/<$idParam>",
+                        'urlRule' => "DELETE $baseUrl/<$idParam:\d>",
                         'visible' => in_array('delete', $controls),
                     ],
                 ],
