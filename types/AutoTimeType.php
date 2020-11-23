@@ -13,6 +13,17 @@ class AutoTimeType extends DateTimeType
         return static::PHP_STRING_TYPE;
     }
 
+    public function prepareFormatterProps($modelClass, $attribute, &$props)
+    {
+        $props = array_merge(
+            [
+                'component' => 'DateTimeFormatter',
+                'attribute' => $attribute,
+            ],
+            $props
+        );
+    }
+
     /**
      * @inheritdoc
      */
