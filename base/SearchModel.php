@@ -2,6 +2,7 @@
 
 namespace steroids\core\base;
 
+use steroids\core\structure\SearchModelResponse;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\db\ActiveQuery;
@@ -58,6 +59,11 @@ class SearchModel extends FormModel
      * @var object
      */
     public $meta = [];
+
+    /**
+     * @var bool Enable to skip results items processing and return only totalCount with meta
+     */
+    private bool $returnOnlyCount = false;
 
     /**
      * @param array $params
@@ -164,6 +170,12 @@ class SearchModel extends FormModel
 
     public function toFrontend($fields = null, $user = null)
     {
+        $searchModelResponse = $this->prepareResponse();
+
+        if ($this->returnOnlyCount) {
+            return $searchModelResponse->toFrontend();
+        }
+
         if ($this->user !== false) {
             $user = $user ?: $this->user ?: (\Yii::$app->has('user') ? \Yii::$app->user->identity : null);
         } else {
@@ -183,6 +195,24 @@ class SearchModel extends FormModel
             }
         }
 
+        $searchModelResponse->items = $items;
+
+        return $searchModelResponse->toFrontend();
+    }
+
+    /**
+     * Return only count
+     *
+     * @return self
+     */
+    public function onlyCount()
+    {
+        $this->returnOnlyCount = true;
+        return $this;
+    }
+
+    private function prepareResponse(): SearchModelResponse
+    {
         // Append meta
         if (in_array(self::SCOPE_MODEL, $this->scope) && $this->dataProvider instanceof ActiveDataProvider) {
             /** @var ActiveQuery $query */
@@ -193,16 +223,11 @@ class SearchModel extends FormModel
             }
         }
 
-        // Result
-        $result = [
-            'meta' => !empty($this->meta) ? $this->meta : null,
+        return new SearchModelResponse([
             'total' => $this->dataProvider->getTotalCount(),
-            'items' => $items,
-        ];
-        if ($this->hasErrors()) {
-            $result['errors'] = $this->getErrors();
-        }
-        return $result;
+            'meta' => !empty($this->meta) ? $this->meta : null,
+            'errors' => $this->getErrors(),
+        ]);
     }
 
     /**
