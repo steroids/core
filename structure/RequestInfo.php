@@ -102,6 +102,41 @@ class RequestInfo extends BaseObject
         return implode("\n", $lines);
     }
 
+    public static function createFromRaw($raw)
+    {
+        $request = new static();
+
+        $index = strpos($raw, "\n\n");
+
+        // Head
+        $head = substr($raw, 0, $index);
+        foreach(preg_split("/\n/", $head) as $lineIndex => $line){
+            if ($lineIndex === 0) {
+                list($method, $url) = explode(' ', $line);
+                $request->method = strtolower($method);
+                $request->url = $url;
+            } else {
+                $headerIndex = strpos($line, ':');
+                if ($headerIndex !== false) {
+                    $request->headers[substr($line, 0, $headerIndex)] = trim(substr($line, $headerIndex + 1));
+                }
+            }
+        }
+
+        // Body
+        $body = trim(substr($raw, $index));
+        $request->rawBody = $body;
+        if (in_array(substr($body, 0, 1), ['{', '['])) {
+            // Json
+            $request->params = Json::decode($body);
+        } else {
+            // Query string
+            parse_str($body, $request->params);
+        }
+
+        return $request;
+    }
+
     public function __toString()
     {
         $link = new UrlInfo($this->url);
