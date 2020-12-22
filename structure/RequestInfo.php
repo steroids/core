@@ -79,8 +79,8 @@ class RequestInfo extends BaseObject
     public function getHeader(string $name)
     {
         foreach ($this->headers as $key => $value) {
-            if (strtolower($key) === strtolower($key)) {
-                return $value;
+            if (strtolower($name) === strtolower($key)) {
+                return is_array($value) ? array_values($value)[0] : $value;
             }
         }
         return null;
