@@ -35,6 +35,15 @@ class RequestInfo extends BaseObject
         ]);
     }
 
+    public static function createFromUrl(string $url)
+    {
+        $info = new UrlInfo($url);
+        return new static([
+            'url' => $info->protocol . '://' . $info->host . $info->path,
+            'params' => $info->params,
+        ]);
+    }
+
     /**
      * @param array|string $params
      * @return bool
@@ -61,6 +70,20 @@ class RequestInfo extends BaseObject
     public function getParam(string $key)
     {
         return ArrayHelper::getValue($this->params, $key);
+    }
+
+    /**
+     * @param string $name
+     * @return mixed|null
+     */
+    public function getHeader(string $name)
+    {
+        foreach ($this->headers as $key => $value) {
+            if (strtolower($key) === strtolower($key)) {
+                return $value;
+            }
+        }
+        return null;
     }
 
     public function toRaw()
