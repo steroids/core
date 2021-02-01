@@ -139,16 +139,6 @@ class Model extends ActiveRecord
     }
 
     /**
-     * @param Model|null $user
-     * @return array
-     */
-    public function getModelLinks($user)
-    {
-        return [];
-    }
-
-
-    /**
      * @inheritdoc
      */
     public function transactions()

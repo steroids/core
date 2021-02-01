@@ -16,22 +16,7 @@ class FilesType extends RelationType
     /**
      * @inheritdoc
      */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'FileField',
-                'attribute' => $attribute,
-                'multiple' => true,
-            ],
-            $props
-        );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getFieldData($item, $params)
+    /*public function getFieldData($item, $params)
     {
         $initialFiles = [];
         $files = File::findAll(['id' => ArrayHelper::getValue($params, 'fileIds', [])]);
@@ -49,29 +34,7 @@ class FilesType extends RelationType
         return [
             'initialFiles' => !empty($initialFiles) ? $initialFiles : null,
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function renderValue($model, $attribute, $item, $options = [])
-    {
-        return implode(' ', array_map(function ($file) use ($model, $options) {
-            /** @type File $file */
-            $url = $file->previewImageUrl;
-            if (!$url) {
-                return '';
-            }
-
-            $size = !empty($options['forTable']) ? 22 : 64;
-
-            return Html::img($url, array_merge([
-                'width' => $size,
-                'height' => $size,
-                'alt' => $model->modelLabel,
-            ], $options));
-        }, $model->$attribute));
-    }
+    }*/
 
     /**
      * @inheritdoc

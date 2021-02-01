@@ -117,11 +117,6 @@ class SearchModel extends FormModel
         return $modelClass::find();
     }
 
-    public function formName()
-    {
-        return '';
-    }
-
     /**
      * @return ActiveDataProvider|ArrayDataProvider|array
      */

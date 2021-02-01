@@ -11,8 +11,6 @@ use yii\web\UrlRule;
 /**
  * @package steroids\core\components
  * @property callable|callable[]|null $accessCheck
- * @property bool $active
- * @property-read string $modelLabel
  * @property-read string|array $normalizedUrl
  * @property-read array $pathIds
  */
@@ -40,16 +38,6 @@ class SiteMapItem extends BaseObject
     public $urlRule;
 
     /**
-     * @var bool
-     */
-    private $_visible = true;
-
-    /**
-     * @var bool
-     */
-    public $encode;
-
-    /**
      * @var float
      */
     public $order = 0;
@@ -58,16 +46,6 @@ class SiteMapItem extends BaseObject
      * @var SiteMapItem[]
      */
     public $items = [];
-
-    /**
-     * @var array
-     */
-    public $options = [];
-
-    /**
-     * @var array
-     */
-    public $linkOptions = [];
 
     /**
      * @var SiteMap
@@ -85,11 +63,6 @@ class SiteMapItem extends BaseObject
     public $redirectToChild = false;
 
     /**
-     * @var bool
-     */
-    public $_active;
-
-    /**
      * @var callable|callable[]
      */
     private $_accessCheck;
@@ -97,24 +70,7 @@ class SiteMapItem extends BaseObject
     /**
      * @var string
      */
-    public $icon;
-
-    /**
-     * @var int|string
-     */
-    public $badge;
-
-    /**
-     * @var string
-     */
-    public $modelClass;
-
-    /**
-     * @var string
-     */
     public $controllerRoute;
-
-    private $_modelLabel;
 
     /**
      * @return callable|callable[]|null
@@ -133,53 +89,6 @@ class SiteMapItem extends BaseObject
     public function setAccessCheck($value)
     {
         $this->_accessCheck = $value;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getActive()
-    {
-        if ($this->_active === null) {
-            $this->_active = false;
-
-            if ($this->normalizedUrl && $this->owner->isUrlEquals($this->normalizedUrl, $this->owner->getRequestedRoute())) {
-                $this->_active = true;
-            } else {
-                foreach ($this->items as $itemModel) {
-                    if ($itemModel->active) {
-                        $this->_active = true;
-                        break;
-                    }
-                }
-            }
-        }
-        return $this->_active;
-    }
-
-    /**
-     * @param bool $value
-     */
-    public function setActive($value)
-    {
-        $this->_active = (bool)$value;
-    }
-
-    /**
-     * @param bool $checkAccess
-     * @return bool
-     */
-    public function getVisible($checkAccess = true)
-    {
-        return $this->_visible && (!$checkAccess || $this->checkVisible($this->normalizedUrl));
-    }
-
-    /**
-     * @param bool
-     */
-    public function setVisible($value)
-    {
-        $this->_visible = $value;
     }
 
     /**
@@ -213,24 +122,7 @@ class SiteMapItem extends BaseObject
             $url = [$this->url[0]];
 
             foreach ($this->url as $key => $value) {
-                if (strpos($value, ':') !== false) {
-                    list($getter, $name) = explode(':', $value);
-
-                    if (is_int($key) && $key > 0) {
-                        $key = $name;
-                    }
-
-                    switch ($getter) {
-                        case 'user':
-                            $url[$key] = SiteMap::paramUser($name);
-                            break;
-
-                        case '':
-                        case 'get':
-                            $url[$key] = SiteMap::paramGet($name);
-                            break;
-                    }
-                } elseif ($value !== null) {
+                if ($value !== null) {
                     $url[$key] = $value;
                 }
             }
@@ -255,43 +147,15 @@ class SiteMapItem extends BaseObject
         return $this->url;
     }
 
-    public function getModelLabel() {
-        if ($this->_modelLabel === null) {
-            $this->_modelLabel = $this->label;
-
-            /** @var \steroids\core\base\Model $modelClass */
-            $modelClass = $this->modelClass;
-            $coreModelClassName = '\steroids\core\base\Model';
-            if ($modelClass && class_exists($coreModelClassName) && is_subclass_of($modelClass, $coreModelClassName)) {
-                $pkParam = $modelClass::getRequestParamName();
-                $primaryKey = SiteMap::paramGet($pkParam);
-                if ($primaryKey) {
-                    $model = $modelClass::findOne($primaryKey);
-                    if ($model) {
-                        $this->_modelLabel = $model->getModelLabel();
-                    }
-                }
-            }
-        }
-        return $this->_modelLabel;
-    }
-
     /**
      * @return array
      */
     public function toArray()
     {
         return [
-            'label' => $this->modelLabel,
+            'label' => $this->label,
             'url' => $this->getNormalizedUrl(),
-            'visible' => $this->getVisible(),
-            'encode' => $this->encode,
-            'active' => $this->active,
-            'icon' => $this->icon,
-            'badge' => $this->badge,
             'items' => $this->items,
-            'options' => $this->options,
-            'linkOptions' => $this->linkOptions,
         ];
     }
 }

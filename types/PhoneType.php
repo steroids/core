@@ -7,26 +7,6 @@ use yii\db\Schema;
 
 class PhoneType extends Type
 {
-    public function getPhpType()
-    {
-        return static::PHP_STRING_TYPE;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'InputField',
-                'attribute' => $attribute,
-                'type' => 'phone',
-            ],
-            $props
-        );
-    }
-
     /**
      * @inheritdoc
      */

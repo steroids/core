@@ -10,24 +10,6 @@ class PasswordType extends Type
     public $min = YII_ENV_DEV ? 1 : 3;
     public $max = 255;
 
-    public function getPhpType()
-    {
-        return static::PHP_STRING_TYPE;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'PasswordField',
-                'attribute' => $attribute,
-            ],
-            $props
-        );
-    }
     /**
      * @inheritdoc
      */
@@ -40,14 +22,6 @@ class PasswordType extends Type
             ],
             $property
         );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function renderValue($model, $attribute, $item, $options = [])
-    {
-        return '********';
     }
 
     /**

@@ -2,17 +2,14 @@
 
 namespace steroids\core\types;
 
-use steroids\core\base\Model;
 use steroids\gii\forms\BackendModelAttributeEntity;
 use Yii;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
 
-class DoubleType extends IntegerType
+class FloatType extends IntegerType
 {
     const OPTION_SCALE = 'scale';
-
-    public $formatter = null;
 
     public function getPhpType()
     {
@@ -20,16 +17,16 @@ class DoubleType extends IntegerType
     }
 
     /**
-     * @param Model $model
-     * @param string $attribute
-     * @param array $item
-     * @param array $options
-     * @return string|null
+     * @inheritdoc
      */
-    public function renderValue($model, $attribute, $item, $options)
+    public function prepareSwaggerProperty($modelClass, $attribute, &$property)
     {
-        $scale = ArrayHelper::getValue($item, self::OPTION_SCALE) ?: 2;
-        return Yii::$app->formatter->asDecimal($model->$attribute, $scale);
+        $property = array_merge(
+            [
+                'type' => 'number',
+            ],
+            $property
+        );
     }
 
     /**
@@ -50,19 +47,6 @@ class DoubleType extends IntegerType
         return [
             [$attributeEntity->name, 'number'],
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prepareSwaggerProperty($modelClass, $attribute, &$property)
-    {
-        $property = array_merge(
-            [
-                'type' => 'number',
-            ],
-            $property
-        );
     }
 
     /**

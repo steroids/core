@@ -8,22 +8,6 @@ class AutoTimeType extends DateTimeType
 {
     const OPTION_TOUCH_ON_UPDATE = 'touchOnUpdate';
 
-    public function getPhpType()
-    {
-        return static::PHP_STRING_TYPE;
-    }
-
-    public function prepareFormatterProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'DateTimeFormatter',
-                'attribute' => $attribute,
-            ],
-            $props
-        );
-    }
-
     /**
      * @inheritdoc
      */
@@ -51,7 +35,7 @@ class AutoTimeType extends DateTimeType
             [
                 'attribute' => self::OPTION_TOUCH_ON_UPDATE,
                 'component' => 'CheckboxField',
-                'label' => 'Is update',
+                'label' => 'Update?',
             ],
         ];
     }

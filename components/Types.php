@@ -9,7 +9,7 @@ use steroids\core\base\Type;
 use steroids\core\helpers\ClassFile;
 use steroids\core\types\AutoTimeType;
 use steroids\core\types\BooleanType;
-use steroids\core\types\DoubleType;
+use steroids\core\types\FloatType;
 use steroids\core\types\MoneyType;
 use steroids\core\types\DateTimeType;
 use steroids\core\types\DateType;
@@ -38,7 +38,7 @@ use yii\helpers\Html;
  * @property-read MoneyType $money
  * @property-read DateTimeType $dateTime
  * @property-read DateType $date
- * @property-read DoubleType $double
+ * @property-read FloatType $double
  * @property-read EnumType $enum
  * @property-read FilesType $files
  * @property-read FileType $file
@@ -122,33 +122,6 @@ class Types extends Component
         $metaItem = ArrayHelper::getValue($modelClass::meta(), $attribute, []);
         $appType = ArrayHelper::getValue($metaItem, 'appType', 'string');
         return $this->getType($appType);
-    }
-
-    /**
-     * @param Model $model
-     * @param string $attribute
-     * @param array $options
-     * @return string
-     */
-    public function renderValue($model, $attribute, $options = [])
-    {
-        $item = $this->getMetaItem($model, $attribute);
-        if (!$item) {
-            return '';
-        }
-
-        $type = $this->getTypeByItem($item);
-        $value = $type->renderValue($model, $attribute, $item, $options);
-        if ($value !== null) {
-            return $value;
-        }
-        if (is_callable($type->formatter)) {
-            return call_user_func($type->formatter, $model->$attribute, $model, $attribute, $item, $options);
-        } elseif (is_array($type->formatter) || is_string($type->formatter)) {
-            return \Yii::$app->formatter->format($model->$attribute, $type->formatter);
-        }
-
-        return Html::encode($model->$attribute);
     }
 
     /**

@@ -3,32 +3,11 @@
 namespace steroids\core\types;
 
 use steroids\core\base\Type;
-use Yii;
 use yii\db\Schema;
-use yii\helpers\ArrayHelper;
 
 class DateType extends Type
 {
     const OPTION_FORMAT = 'format';
-
-    public function getPhpType()
-    {
-        return static::PHP_STRING_TYPE;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'DateField',
-                'attribute' => $attribute,
-            ],
-            $props
-        );
-    }
 
     /**
      * @inheritdoc
@@ -42,15 +21,6 @@ class DateType extends Type
             ],
             $property
         );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function renderValue($model, $attribute, $item, $options = [])
-    {
-        $format = ArrayHelper::remove($item, self::OPTION_FORMAT);
-        return Yii::$app->formatter->asDate($model->$attribute, $format);
     }
 
     /**

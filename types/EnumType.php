@@ -10,44 +10,21 @@ use steroids\gii\forms\BackendEnumEntity;
 use steroids\gii\models\ValueExpression;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\helpers\StringHelper;
-use yii\web\JsExpression;
 
 class EnumType extends Type
 {
     const OPTION_CLASS_NAME = 'enumClassName';
 
-    public function getPhpType()
-    {
-        return static::PHP_STRING_TYPE;
-    }
-
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
+    public function prepareMeta($item)
     {
-        $props = array_merge(
-            [
-                'component' => 'DropDownField',
-                'attribute' => $attribute,
-                'items' => $this->getItemsProperty($modelClass, $attribute),
-            ],
-            $props
-        );
-    }
-
-    public function prepareFormatterProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'EnumFormatter',
-                'attribute' => $attribute,
-                'items' => $this->getItemsProperty($modelClass, $attribute),
-            ],
-            $props
-        );
+        $enumClass = ArrayHelper::getValue($item, self::OPTION_CLASS_NAME);
+        return [
+            'enumClassName' => trim(str_replace('\\', '.', $enumClass), '.') ?: null,
+        ];
     }
 
     /**
@@ -84,39 +61,7 @@ class EnumType extends Type
 
 
 
-    /**
-     * @inheritdoc
-     */
-    public function renderValue($model, $attribute, $item, $options = [])
-    {
-        /** @var Enum $className */
-        $className = ArrayHelper::getValue($item, self::OPTION_CLASS_NAME);
 
-        $label = $className::getLabel($model->$attribute);
-        $cssClass = $className::getCssClass($model->$attribute);
-
-        return $cssClass ? Html::tag('span', $label, ['class' => 'label label-' . $cssClass]) : $label;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getGiiJsMetaItem($attributeEntity, $item, &$import = [])
-    {
-        $result = parent::getGiiJsMetaItem($attributeEntity, $item, $import);
-        $enumClass = $attributeEntity->getCustomProperty(self::OPTION_CLASS_NAME);
-        if ($enumClass) {
-            $modelEntity = BackendEnumEntity::findOne($enumClass);
-            if (file_exists($modelEntity->getMetaJsPath())) {
-                $import[] = 'import ' . $modelEntity->name . 'Meta from \'' . str_replace('\\', '/', $modelEntity->getClassName() . 'Meta') . '\';';
-                $result['enumClassName'] = new JsExpression($modelEntity->metaClass->name);
-            } elseif (file_exists($modelEntity->getPath())) {
-                $import[] = 'import ' . $modelEntity->name . ' from \'' . str_replace('\\', '/', $modelEntity->getClassName()) . '\';';
-                $result['enumClassName'] = new JsExpression($modelEntity->name);
-            }
-        }
-        return $result;
-    }
 
     /**
      * @inheritdoc

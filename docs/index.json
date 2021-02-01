@@ -1,0 +1,59 @@
+{
+  "index": "Обзор",
+  "items": {
+    "backend": {
+      "application_structure": "Структура приложения",
+      "bootstrap": "Инициализация приложения",
+      "types": "Внутренние типы (appType)",
+      "model": {
+        "label": "Модели",
+        "items": {
+          "model_ar": "Модель ActiveRecord",
+          "model_form": "Модель Form",
+          "model_search": "Модель Search",
+          "model_meta": "Мета-модели (*Meta)",
+          "model_nested": "Сохранение вложенной структуры данных",
+          "model_fields": "Публичные поля и схемы"
+        }
+      },
+      "enum": "Перечисления (Enum)",
+      "schema": "Схемы (Scheme)",
+      "controllers": "Контроллеры, экшены и разбор URL",
+      "crud": "CRUD контроллер",
+      "middleware": {
+        "label": "Модели",
+        "items": {
+          "middleware_access": "AccessMiddleware: Права доступа",
+          "middleware_response": "AjaxResponseMiddleware: JSON преобразование"
+        }
+      },
+      "component": {
+        "label": "Компоненты",
+        "items": {
+          "component_authmanager": "AuthManager: Контроль прав доступа",
+          "component_cors": "Cors: Настройка CORS запросов"
+        }
+      },
+      "module": {
+        "label": "Модули",
+        "items": {
+          "module_auth": "Auth: Авторизация, 2FA, Captcha",
+          "module_billing": "Billing: Биллинг",
+          "module_cron": "Cron: Менеджер крон задач",
+          "module_file": "File: Модуль загрузки файлов",
+          "module_gii": "Gii: Генератор кода",
+          "module_notifier": "Notifier: Отправка уведомлений",
+          "module_payment": "Payment: Оплата и вывод через платежные системы",
+          "module_swagger": "Swagger: Автогенерация документации"
+        }
+      }
+    }
+  },
+  "frontend": {
+    "index": "Обзор",
+    "getting-started": "Начало работы",
+    "project-architecture": "Архитектура проекта",
+    "ui-architecture": "Архитектура UI компонентов",
+    "routes": "Роутинг"
+  }
+}

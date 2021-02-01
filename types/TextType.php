@@ -7,13 +7,6 @@ use yii\db\Schema;
 
 class TextType extends Type
 {
-    public $formatter = 'ntext';
-
-    public function getPhpType()
-    {
-        return static::PHP_STRING_TYPE;
-    }
-
     /**
      * @inheritdoc
      */

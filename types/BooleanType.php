@@ -4,66 +4,13 @@ namespace steroids\core\types;
 
 use steroids\core\base\Type;
 use steroids\core\validators\ExtBooleanValidator;
-use Yii;
 use yii\db\Schema;
 
 class BooleanType extends Type
 {
-    public $formatter = 'boolean';
-
     public function getPhpType()
     {
         return static::PHP_BOOLEAN_TYPE;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'CheckboxField',
-                'attribute' => $attribute,
-            ],
-            $props
-        );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prepareSearchFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'DropDownField',
-                'attribute' => $attribute,
-                'items' => [
-                    [
-                        'id' => 1,
-                        'label' => Yii::t('steroids', 'Да')
-                    ],
-                    [
-                        'id' => 0,
-                        'label' => Yii::t('steroids', 'Нет')
-                    ],
-                ],
-                'showReset' => true,
-            ],
-            $props
-        );
-    }
-
-    public function prepareFormatterProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'BooleanFormatter',
-                'attribute' => $attribute,
-            ],
-            $props
-        );
     }
 
     /**
