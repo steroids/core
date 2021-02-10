@@ -141,7 +141,7 @@ trait RelationSaveTrait
                     // update or insert
                     /* @type Model $related */
                     $related = $relation->one() ?: new $relatedModel();
-                    $related->listenRelation($listenChildren);
+                    $related->listenRelationData($listenChildren);
                     $related->load($value, '');
                     $this->populateRelation($relationName, $related);
                 }
@@ -162,7 +162,7 @@ trait RelationSaveTrait
 
                             /** @var Model $item */
                             $item = ArrayHelper::getValue($prevItems, $pk, new $relatedModel());
-                            $item->listenRelation($listenChildren);
+                            $item->listenRelationData($listenChildren);
                             $item->load($valueItem, '');
 
                             $nextItems[] = $item;
@@ -171,7 +171,7 @@ trait RelationSaveTrait
                         foreach ($value as $valueItem) {
                             /** @var Model|FormModel $item */
                             $item = new $relatedModel();
-                            $item->listenRelation($listenChildren);
+                            $item->listenRelationData($listenChildren);
                             $item->load($valueItem, '');
 
                             $nextItems[] = $item;

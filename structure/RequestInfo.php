@@ -3,6 +3,7 @@
 namespace steroids\core\structure;
 
 use yii\base\BaseObject;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\Request;
@@ -23,7 +24,14 @@ class RequestInfo extends BaseObject
      */
     public static function createFromYii($request = null)
     {
+        if (!$request && STEROIDS_IS_CLI) {
+            return static::createFromUrl('http://cli');
+        }
+
         $request = $request ?: \Yii::$app->request;
+        if (!($request instanceof Request)) {
+            throw new Exception('Cannot create RequestInfo from Yii request - is not web.');
+        }
 
         $port = $request->port && $request->port !== 80 ? ':' . $request->port : '';
         return new static([
