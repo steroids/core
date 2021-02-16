@@ -10,6 +10,12 @@ class BaseSchema extends FormModel
     public $model;
 
     /**
+     * Context user model
+     * @var Model
+     */
+    public $user;
+
+    /**
      * @param $models
      * @return static[]
      */

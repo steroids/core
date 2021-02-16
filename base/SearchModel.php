@@ -262,6 +262,6 @@ class SearchModel extends FormModel
      */
     protected function createSchema($schema, $model)
     {
-        return new $schema(['model' => $model]);
+        return new $schema(['model' => $model, 'user' => $this->user]);
     }
 }
