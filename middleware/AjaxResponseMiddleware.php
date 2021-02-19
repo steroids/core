@@ -93,7 +93,7 @@ class AjaxResponseMiddleware extends BaseObject
                     }
                 }
 
-                $event->result = is_array($data) && empty($data) ? new JsExpression('{}') : $data;
+                $event->result = is_array($data) && empty($data) ? new JsExpression('[]') : $data;
             }
         }
 
