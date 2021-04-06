@@ -180,9 +180,10 @@ abstract class CrudApiController extends Controller
     public function actionView()
     {
         $model = $this->findModel();
-        if (!$model->canView(Yii::$app->user->identity)) {
-            throw new ForbiddenHttpException();
-        }
+        // Auto user permission is disabled
+//        if (!$model->canView(Yii::$app->user->identity)) {
+//            throw new ForbiddenHttpException();
+//        }
 
         $viewSchema = static::viewSchema();
         if ($viewSchema) {

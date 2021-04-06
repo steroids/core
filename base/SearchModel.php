@@ -147,7 +147,8 @@ class SearchModel extends FormModel
 
     public function getItems($fields = null, $user = null)
     {
-        $user = $user ?: $this->user;
+        // Auto user permission is disabled
+//        $user = $user ?: $this->user;
         $schema = $this->fieldsSchema();
         $fields = $fields ?: $this->fields();
 
