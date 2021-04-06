@@ -7,15 +7,26 @@
         "ext-mbstring": "*",
         "ext-curl": "*",
         "lib-pcre": "*",
-        "yiisoft/yii2": "^2.0",
+        "yiisoft/yii2": "2.0.40",
         "yiisoft/yii2-swiftmailer": "^2.1",
         "yiisoft/yii2-debug": "^2.1",
         "notamedia/yii2-sentry": "^1.3",
         "yiisoft/yii2-gii": "^2.0",
-        "phpunit/phpunit": "^9.1.5",
-        "doctrine/annotations": "^1.6"
+        "phpunit/phpunit": "^9.3",
+        "doctrine/annotations": "^1.11.1"
     },
     "autoload": {
         "psr-4": {"steroids\\core\\": ""}
-    }
+    },
+    "config": {
+        "fxp-asset": {
+            "enabled": false
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }

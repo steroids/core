@@ -2,12 +2,13 @@
 
 namespace tests\unit;
 
-use steroids\base\WebApplication;
-use steroids\components\SiteMap;
+use PHPUnit\Framework\TestCase;
+use steroids\core\base\WebApplication;
+use steroids\core\components\SiteMap;
 use steroids\helpers\DefaultConfig;
 use yii\helpers\ArrayHelper;
 
-class SiteMapTest extends \PHPUnit_Framework_TestCase
+class SiteMapTest extends TestCase
 {
 
     public function testLoadFromModules()
