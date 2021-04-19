@@ -43,47 +43,52 @@ abstract class CrudApiController extends Controller
 
         $reflectionInfo = new \ReflectionClass($modelClass);
 
+        $items = [];
+        $items['index'] = [
+            'label' => \Yii::t('steroids', 'Список'),
+            'url' => ['index'],
+            'urlRule' => "GET $baseUrl",
+        ];
+        if (in_array('create', $controls)) {
+            $items['create'] = [
+                'label' => \Yii::t('steroids', 'Добавление'),
+                'url' => ['create'],
+                'urlRule' => "POST $baseUrl",
+            ];
+        }
+        if (in_array('update-batch', $controls)) {
+            $items['update-batch'] = [
+                'label' => \Yii::t('steroids', 'Множественное редактирование'),
+                'url' => ['update-batch'],
+                'urlRule' => "PUT,POST $baseUrl/update-batch",
+            ];
+        }
+        if (in_array('update', $controls)) {
+            $items['update'] = [
+                'label' => \Yii::t('steroids', 'Редактирование'),
+                'url' => ['update'],
+                'urlRule' => "PUT,POST $baseUrl/<$idParam:\d+>",
+            ];
+        }
+        if (in_array('view', $controls)) {
+            $items['view'] = [
+                'label' => \Yii::t('steroids', 'Просмотр'),
+                'url' => ['view'],
+                'urlRule' => "GET $baseUrl/<$idParam:\d+>",
+            ];
+        }
+        if (in_array('delete', $controls)) {
+            $items['delete'] = [
+                'label' => \Yii::t('steroids', 'Удаление'),
+                'url' => ['delete'],
+                'urlRule' => "DELETE $baseUrl/<$idParam:\d+>",
+            ];
+        }
+
         return ArrayHelper::merge(
             [
                 'label' => $reflectionInfo->getShortName(),
-                'items' => [
-                    'index' => [
-                        'label' => \Yii::t('steroids', 'Список'),
-                        'url' => ['index'],
-                        'urlRule' => "GET $baseUrl",
-                        'visible' => in_array('create', $controls),
-                    ],
-                    'create' => [
-                        'label' => \Yii::t('steroids', 'Добавление'),
-                        'url' => ['create'],
-                        'urlRule' => "POST $baseUrl",
-                        'visible' => in_array('create', $controls),
-                    ],
-                    'update-batch' => [
-                        'label' => \Yii::t('steroids', 'Множественное редактирование'),
-                        'url' => ['update-batch'],
-                        'urlRule' => "PUT,POST $baseUrl/update-batch",
-                        'visible' => in_array('update-batch', $controls),
-                    ],
-                    'update' => [
-                        'label' => \Yii::t('steroids', 'Редактирование'),
-                        'url' => ['update'],
-                        'urlRule' => "PUT,POST $baseUrl/<$idParam:\d+>",
-                        'visible' => in_array('update', $controls),
-                    ],
-                    'view' => [
-                        'label' => \Yii::t('steroids', 'Просмотр'),
-                        'url' => ['view'],
-                        'urlRule' => "GET $baseUrl/<$idParam:\d+>",
-                        'visible' => in_array('view', $controls),
-                    ],
-                    'delete' => [
-                        'label' => \Yii::t('steroids', 'Удаление'),
-                        'url' => ['delete'],
-                        'urlRule' => "DELETE $baseUrl/<$idParam:\d+>",
-                        'visible' => in_array('delete', $controls),
-                    ],
-                ],
+                'items' => $items,
             ],
             $custom
         );
