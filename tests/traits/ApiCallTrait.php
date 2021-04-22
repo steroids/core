@@ -5,8 +5,8 @@ namespace steroids\core\tests\traits;
 use steroids\core\base\FormModel;
 use steroids\core\base\Model;
 use steroids\core\tests\TestWebUser;
-use yii\web\Request;
 use Yii;
+use yii\web\Request;
 
 trait ApiCallTrait
 {
@@ -33,7 +33,7 @@ trait ApiCallTrait
             'pathInfo' => $url,
         ]);
         $request->headers->add('X-Http-Method-Override', $httpMethod);
-//        var_dump(Yii::$app);die;
+
         if ($httpMethod === 'GET') {
             $request->setQueryParams($params);
             Yii::$app->request->setQueryParams($params);
