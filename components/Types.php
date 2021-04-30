@@ -251,7 +251,7 @@ class Types extends Component
                 }
 
                 //$result[$name]['labels'] = $className::asEnum();
-                $result[$name]['fields'] = $entity->getJsFields(false);
+                $result[$name]['attributes'] = $entity->getJsFields(false);
                 $result[$name]['searchFields'] = $entity->getJsFields(true);
                 $result[$name]['formatters'] = $entity->getJsFormatters();
                 $result[$name]['permissions'] = $entity->getStaticPermissions(\Yii::$app->user->identity);
