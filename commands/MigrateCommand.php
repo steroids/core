@@ -66,16 +66,31 @@ class MigrateCommand extends MigrateController
 
         // Append library migrations with same class names
         foreach (array_keys($migrations) as $name) {
-            $info = new \ReflectionClass($name);
-
-            if (isset($this->migrationNamespaceExtends[$info->getNamespaceName()])) {
-                $extendName = $this->migrationNamespaceExtends[$info->getNamespaceName()] . '\\' . $info->getShortName();
-                if (class_exists($extendName)) {
-                    $migrations[$extendName] = $migrations[$name];
-                }
+            $extendName = $this->getExtendedName($name);
+            if ($extendName) {
+                $migrations[$extendName] = $migrations[$name];
             }
         }
 
         return $migrations;
+    }
+
+    protected function getNewMigrations()
+    {
+        $migrations = parent::getNewMigrations();
+        $migrations = array_filter($migrations, fn($name) => !$this->getExtendedName($name));
+        return $migrations;
+    }
+
+    protected function getExtendedName($name)
+    {
+        $info = new \ReflectionClass($name);
+        if (isset($this->migrationNamespaceExtends[$info->getNamespaceName()])) {
+            $extendName = $this->migrationNamespaceExtends[$info->getNamespaceName()] . '\\' . $info->getShortName();
+            if (class_exists($extendName)) {
+                return $extendName;
+            }
+        }
+        return null;
     }
 }

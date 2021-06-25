@@ -175,7 +175,7 @@ class Boot
         ];
 
         // Add debug module for development env
-        if (YII_ENV_DEV) {
+        if (YII_ENV_DEV && !STEROIDS_IS_CLI) {
             $config['bootstrap'][] = 'debug';
             $config['modules']['debug'] = 'yii\debug\Module';
         }
