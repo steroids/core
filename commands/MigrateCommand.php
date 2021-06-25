@@ -4,6 +4,7 @@ namespace steroids\core\commands;
 
 use yii\base\Module;
 use yii\console\controllers\MigrateController;
+use ReflectionException;
 
 class MigrateCommand extends MigrateController
 {
@@ -60,13 +61,16 @@ class MigrateCommand extends MigrateController
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getMigrationHistory($limit)
     {
         $migrations = parent::getMigrationHistory($limit);
 
-        // Append library migrations with same class names
+        // Append library migrations, if it is not exists in application
         foreach (array_keys($migrations) as $name) {
-            $extendName = $this->getExtendedName($name);
+            $extendName = $this->getExtendedName($name, $this->migrationNamespaceExtends);
             if ($extendName) {
                 $migrations[$extendName] = $migrations[$name];
             }
@@ -75,18 +79,34 @@ class MigrateCommand extends MigrateController
         return $migrations;
     }
 
+    /**
+     * @inheritDoc
+     * @throws ReflectionException
+     */
     protected function getNewMigrations()
     {
         $migrations = parent::getNewMigrations();
-        $migrations = array_filter($migrations, fn($name) => !$this->getExtendedName($name));
+
+        // Replace library migrations by application migrations
+        $migrations = array_filter($migrations, function ($name) {
+            return !$this->getExtendedName($name, array_flip($this->migrationNamespaceExtends));
+        });
+
         return $migrations;
     }
 
-    protected function getExtendedName($name)
+    /**
+     * Get migration class from map
+     * @param string $name
+     * @param $map
+     * @return string|null
+     * @throws ReflectionException
+     */
+    protected function getExtendedName(string $name, $map)
     {
         $info = new \ReflectionClass($name);
-        if (isset($this->migrationNamespaceExtends[$info->getNamespaceName()])) {
-            $extendName = $this->migrationNamespaceExtends[$info->getNamespaceName()] . '\\' . $info->getShortName();
+        if (isset($map[$info->getNamespaceName()])) {
+            $extendName = $map[$info->getNamespaceName()] . '\\' . $info->getShortName();
             if (class_exists($extendName)) {
                 return $extendName;
             }
