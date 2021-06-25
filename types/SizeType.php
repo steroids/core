@@ -6,8 +6,6 @@ use steroids\core\base\Type;
 
 class SizeType extends Type
 {
-    public $formatter = 'shortSize';
-
     public function getPhpType()
     {
         return static::PHP_INTEGER_TYPE;

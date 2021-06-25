@@ -39,45 +39,6 @@ class RelationType extends Type
     /**
      * @inheritdoc
      */
-    public function renderInputWidget($item, $class, $config)
-    {
-        /** @var Model $modelClass */
-        $modelClass = $config['model'];
-        $relationName = ArrayHelper::getValue($item, self::OPTION_RELATION_NAME);
-
-        $relation = $modelClass->getRelation($relationName);
-        $config['options']['multiple'] = $relation && $relation->multiple;
-
-        return $class::widget($config);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function renderValue($model, $attribute, $item, $options = [])
-    {
-        $relationName = ArrayHelper::remove($item, self::OPTION_RELATION_NAME);
-        $models = !is_array($model->$relationName) ? [$model->$relationName] : $model->$relationName;
-
-        return implode(', ', array_map(function ($model) use ($options) {
-            /** @type Model $model */
-            if (!($model instanceof Model)) {
-                return '';
-            }
-
-            foreach ($model->getModelLinks(Yii::$app->user->identity) as $url) {
-                if (Yii::$app->siteMap->isAllowAccess($url)) {
-                    return Html::a($model->modelLabel, $url, $options);
-                }
-            }
-
-            return $model->modelLabel;
-        }, $models));
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function giiDbType($attributeEntity)
     {
         $relationName = $attributeEntity->getCustomProperty(self::OPTION_RELATION_NAME);

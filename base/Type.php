@@ -13,7 +13,6 @@ abstract class Type extends BaseObject
      * @var string
      */
     public $name;
-    public $formatter;
 
     const PHP_INTEGER_TYPE = '?int';
     const PHP_FLOAT_TYPE = '?float';
@@ -24,19 +23,31 @@ abstract class Type extends BaseObject
     /**
      * @return string
      */
-    abstract public function getPhpType();
+    public function getPhpType()
+    {
+        return static::PHP_STRING_TYPE;
+    }
 
     /**
      * @param Model $model
      * @param string $attribute
-     * @param array $item
-     * @param array $options
      * @return string|null
      */
-    public function renderValue($model, $attribute, $item, $options)
+    public function prepareFrontend($model, $attribute)
     {
         return null;
     }
+
+    /**
+     * @param array $item
+     * @return array|null
+     */
+    public function prepareMeta($item)
+    {
+        return null;
+    }
+
+
 
     /**
      * @param Model|FormModel|string $modelClass
@@ -57,43 +68,12 @@ abstract class Type extends BaseObject
     }
 
     /**
-     * @param array $item
-     * @param array $params
-     * @return array
-     */
-    public function getFieldData($item, $params)
-    {
-        return [];
-    }
-
-    /**
      * @param Model|FormModel|string $modelClass
      * @param string $attribute
      * @param array $props
      */
     public function prepareFormatterProps($modelClass, $attribute, &$props)
     {
-    }
-
-    /**
-     * @param Model $model
-     * @param string $attribute
-     * @param array $values
-     */
-    public function prepareViewValue($model, $attribute, &$values)
-    {
-        $values[$attribute] = $model->$attribute;
-    }
-
-
-    /**
-     * @param BackendModelAttributeEntity $attributeEntity
-     * @param array $item
-     * @return array
-     */
-    public function getGiiJsMetaItem($attributeEntity, $item, &$import = [])
-    {
-        return $item;
     }
 
     /**

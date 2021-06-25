@@ -15,24 +15,11 @@ class FileType extends Type
         return static::PHP_INTEGER_TYPE;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'FileField',
-                'attribute' => $attribute,
-            ],
-            $props
-        );
-    }
 
     /**
      * @inheritdoc
      */
-    public function getFieldData($item, $params)
+    /*public function getFieldData($item, $params)
     {
         $initialFiles = [];
         $files = File::findAll(['id' => ArrayHelper::getValue($params, 'fileIds', [])]);
@@ -50,30 +37,7 @@ class FileType extends Type
         return [
             'initialFiles' => !empty($initialFiles) ? $initialFiles : null,
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function renderValue($model, $attribute, $item, $options = [])
-    {
-        if ($model->$attribute) {
-            $file = File::findOne($model->$attribute);
-            $url = $file ? $file->previewImageUrl : null;
-            if (!$url) {
-                return '';
-            }
-
-            $size = !empty($options['forTable']) ? 22 : 64;
-
-            return Html::img($url, array_merge([
-                'width' => $size,
-                'height' => $size,
-                'alt' => $model->modelLabel,
-            ], $options));
-        }
-        return '';
-    }
+    }*/
 
     /**
      * @inheritdoc

@@ -238,10 +238,10 @@ trait RelationSaveTrait
                     $errors[$relationName] = $related->getErrors();
                 }
             } else {
-                foreach ($this->$relationName as $related) {
+                foreach ($this->$relationName as $index => $related) {
                     /** @type Model $related */
                     if ($related && $related->hasErrors()) {
-                        $errors[$relationName][] = $related->getErrors();
+                        $errors[$relationName][$index] = $related->getErrors();
                     }
                 }
             }

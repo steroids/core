@@ -7,27 +7,11 @@ use yii\db\Schema;
 
 class MoneyType extends Type
 {
-    const OPTION_CURRENCY = 'currency';
-
-    public $formatter = 'currency';
+    const OPTION_CURRENCY = 'currencyCode';
 
     public function getPhpType()
     {
-        return static::PHP_FLOAT_TYPE;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'NumberField',
-                'attribute' => $attribute,
-            ],
-            $props
-        );
+        return static::PHP_INTEGER_TYPE;
     }
 
     /**

@@ -7,28 +7,6 @@ use yii\db\Schema;
 
 class EmailType extends Type
 {
-    public $formatter = 'email';
-
-    public function getPhpType()
-    {
-        return static::PHP_STRING_TYPE;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'InputField',
-                'attribute' => $attribute,
-                'type' => 'email',
-            ],
-            $props
-        );
-    }
-
     /**
      * @inheritdoc
      */

@@ -9,11 +9,6 @@ class ScheduleType extends Type
     const OPTION_SINCE_TIME_ATTRIBUTE = 'sinceTimeAttribute';
     const OPTION_TILL_TIME_ATTRIBUTE = 'tillTimeAttribute';
 
-    public function getPhpType()
-    {
-        return static::PHP_STRING_TYPE;
-    }
-
     /**
      * @inheritdoc
      */

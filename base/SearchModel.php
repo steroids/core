@@ -117,11 +117,6 @@ class SearchModel extends FormModel
         return $modelClass::find();
     }
 
-    public function formName()
-    {
-        return '';
-    }
-
     /**
      * @return ActiveDataProvider|ArrayDataProvider|array
      */
@@ -152,7 +147,8 @@ class SearchModel extends FormModel
 
     public function getItems($fields = null, $user = null)
     {
-        $user = $user ?: $this->user;
+        // Auto user permission is disabled
+//        $user = $user ?: $this->user;
         $schema = $this->fieldsSchema();
         $fields = $fields ?: $this->fields();
 

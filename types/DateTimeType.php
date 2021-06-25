@@ -2,31 +2,10 @@
 
 namespace steroids\core\types;
 
-use Yii;
 use yii\db\Schema;
-use yii\helpers\ArrayHelper;
 
 class DateTimeType extends DateType
 {
-    public function getPhpType()
-    {
-        return static::PHP_STRING_TYPE;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function prepareFieldProps($modelClass, $attribute, &$props)
-    {
-        $props = array_merge(
-            [
-                'component' => 'DateTimeField',
-                'attribute' => $attribute,
-            ],
-            $props
-        );
-    }
-
     /**
      * @inheritdoc
      */
@@ -39,15 +18,6 @@ class DateTimeType extends DateType
             ],
             $property
         );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function renderValue($model, $attribute, $item, $options = [])
-    {
-        $format = ArrayHelper::remove($item, self::OPTION_FORMAT);
-        return Yii::$app->formatter->asDatetime($model->$attribute, $format);
     }
 
     /**
