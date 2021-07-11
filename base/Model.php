@@ -297,7 +297,7 @@ class Model extends ActiveRecord
      */
     public function canView($user)
     {
-        if (\Yii::$app->has('authManager')) {
+        if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return $this->getPermittedAttributes($user, AuthManager::RULE_MODEL_VIEW);
         }
 
@@ -310,7 +310,7 @@ class Model extends ActiveRecord
      */
     public function canCreate($user)
     {
-        if (\Yii::$app->has('authManager')) {
+        if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return $this->getPermittedAttributes($user, AuthManager::RULE_MODEL_CREATE);
         }
 
@@ -323,7 +323,7 @@ class Model extends ActiveRecord
      */
     public function canUpdate($user)
     {
-        if (\Yii::$app->has('authManager')) {
+        if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return $this->canUpdated()
                 ? $this->getPermittedAttributes($user, AuthManager::RULE_MODEL_UPDATE)
                 : false;
@@ -338,7 +338,7 @@ class Model extends ActiveRecord
      */
     public function canDelete($user)
     {
-        if (\Yii::$app->has('authManager')) {
+        if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return \Yii::$app->authManager->checkModelAccess($user, $this, AuthManager::RULE_MODEL_DELETE) && $this->canDeleted();
         }
         return $this->canDeleted();
@@ -366,7 +366,7 @@ class Model extends ActiveRecord
      * @return bool
      */
     public function canCreateAttribute($user, $attributeName) {
-        if (\Yii::$app->has('authManager')) {
+        if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return \Yii::$app->authManager->checkAttributeAccess(
                 $user,
                 $this,
@@ -383,7 +383,7 @@ class Model extends ActiveRecord
      * @return bool
      */
     public function canUpdateAttribute($user, $attributeName) {
-        if (\Yii::$app->has('authManager')) {
+        if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return \Yii::$app->authManager->checkAttributeAccess(
                 $user,
                 $this,
@@ -400,7 +400,7 @@ class Model extends ActiveRecord
      * @return bool
      */
     public function canViewAttribute($user, $attributeName) {
-        if (\Yii::$app->has('authManager')) {
+        if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return \Yii::$app->authManager->checkAttributeAccess(
                 $user,
                 $this,
