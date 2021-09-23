@@ -23,6 +23,8 @@ class AuthManager extends PhpManager
     public $assignmentFile = '@app/config/rbac/assignments.php';
     public $ruleFile = '@app/config/rbac/rules.php';
 
+    public $enableForModel = true;
+
     /**
      * @var array
      */

@@ -79,7 +79,7 @@ trait MetaTrait
             // Syntax: *
             if ($name === '*') {
                 unset($fields[$key]);
-                $fields = array_merge($fields, $model->fields());
+                $fields = array_merge($model->fields(), $fields);
 
                 if ($model instanceof BaseSchema && $model->model instanceof Model) {
                     $index = array_search('*', $fields);

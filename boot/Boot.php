@@ -63,6 +63,10 @@ class Boot
                         'parsers' => [
                             'application/json' => 'yii\web\JsonParser',
                         ],
+                        'ipHeaders' => [
+                            'X-Forwarded-For',
+                            'X-Real-IP',
+                        ],
                     ],
                     'errorHandler' => [
                         'errorView' => '@steroids/core/views/error.php',
