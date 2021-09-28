@@ -3,6 +3,7 @@
 namespace steroids\core\base;
 
 use steroids\gii\forms\BackendModelAttributeEntity;
+use steroids\swagger\models\SwaggerProperty;
 use yii\base\BaseObject;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
@@ -88,16 +89,11 @@ abstract class Type extends BaseObject
     /**
      * @param string $modelClass
      * @param string $attribute
-     * @param array $property
+     * @param SwaggerProperty $property
      */
-    public function prepareSwaggerProperty($modelClass, $attribute, &$property)
+    public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property = array_merge(
-            [
-                'type' => 'string',
-            ],
-            $property
-        );
+        $property->phpType = 'string';
     }
 
     /**

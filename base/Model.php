@@ -20,37 +20,17 @@ use yii\web\NotFoundHttpException;
  */
 class Model extends ActiveRecord
 {
+    const SCOPE_LIST = 'list';
+    const SCOPE_FORM = 'form';
+    const SCOPE_DETAIL = 'detail';
+    const SCOPE_DICTIONARY = 'dictionary';
+    const SCOPE_ADMIN = 'admin';
+
     use MetaTrait;
     use RelationSaveTrait;
     use SecurityTrait;
 
     protected static $_cans;
-
-    public function getPermissions($user) {
-
-        if (static::$_cans === null) {
-            static::$_cans = [];
-            $info = new \ReflectionClass(get_class($this));
-            foreach ($info->getMethods() as $method) {
-                $parameters = $method->getParameters();
-                if (count($parameters) === 0 || $parameters[0]->getName() !== 'user') {
-                    continue;
-                }
-
-                $name = $method->getName();
-                if (preg_match('/^can((?!Attribute)\w)*$/', $name)) {
-                    static::$_cans[] = $name;
-                }
-            }
-        }
-
-        $result = [];
-        foreach (static::$_cans as $can) {
-            $result[$can] = $this->$can($user) ?: false;
-        }
-
-        return $result;
-    }
 
     /**
      * @return string
@@ -92,8 +72,7 @@ class Model extends ActiveRecord
         $idKey = static::getEnumIdKey($models[0]);
         $labelKey = static::getEnumLabelKey($models[0]);
 
-        foreach ($query->all() as $model)
-        {
+        foreach ($query->all() as $model) {
             $item = $model->toFrontend(array_merge(
                 [
                     'id' => $idKey,
@@ -122,6 +101,38 @@ class Model extends ActiveRecord
         }
 
         return $model::primaryKey()[0];
+    }
+
+    public function frontendFields(array $scopes = [], UserInterface $user = null)
+    {
+        return $this->fields();
+    }
+
+    public function getPermissions($user)
+    {
+
+        if (static::$_cans === null) {
+            static::$_cans = [];
+            $info = new \ReflectionClass(get_class($this));
+            foreach ($info->getMethods() as $method) {
+                $parameters = $method->getParameters();
+                if (count($parameters) === 0 || $parameters[0]->getName() !== 'user') {
+                    continue;
+                }
+
+                $name = $method->getName();
+                if (preg_match('/^can((?!Attribute)\w)*$/', $name)) {
+                    static::$_cans[] = $name;
+                }
+            }
+        }
+
+        $result = [];
+        foreach (static::$_cans as $can) {
+            $result[$can] = $this->$can($user) ?: false;
+        }
+
+        return $result;
     }
 
     /**
@@ -355,7 +366,8 @@ class Model extends ActiveRecord
      * @param string $attributeName
      * @return bool
      */
-    public function canCreateAttribute($user, $attributeName) {
+    public function canCreateAttribute($user, $attributeName)
+    {
         if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return \Yii::$app->authManager->checkAttributeAccess(
                 $user,
@@ -372,7 +384,8 @@ class Model extends ActiveRecord
      * @param string $attributeName
      * @return bool
      */
-    public function canUpdateAttribute($user, $attributeName) {
+    public function canUpdateAttribute($user, $attributeName)
+    {
         if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return \Yii::$app->authManager->checkAttributeAccess(
                 $user,
@@ -389,7 +402,8 @@ class Model extends ActiveRecord
      * @param string $attributeName
      * @return bool
      */
-    public function canViewAttribute($user, $attributeName) {
+    public function canViewAttribute($user, $attributeName)
+    {
         if (\Yii::$app->has('authManager') && \Yii::$app->authManager->enableForModel) {
             return \Yii::$app->authManager->checkAttributeAccess(
                 $user,
@@ -406,13 +420,14 @@ class Model extends ActiveRecord
      * @param string $rule
      * @return array|bool of attribute names
      */
-    protected function getPermittedAttributes($user, $rule) {
+    protected function getPermittedAttributes($user, $rule)
+    {
         $permissionCheckMethod = 'can' . ucfirst($rule) . 'Attribute';
 
         $attributes = array_values(
             array_filter(
                 array_keys(static::meta()),
-                function($attribute) use ($user, $permissionCheckMethod) {
+                function ($attribute) use ($user, $permissionCheckMethod) {
                     return $this->$permissionCheckMethod($user, $attribute);
                 }
             )

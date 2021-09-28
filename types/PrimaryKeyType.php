@@ -13,18 +13,11 @@ class PrimaryKeyType extends Type
     }
 
     /**
-     * @param string $modelClass
-     * @param string $attribute
-     * @param string $property
+     * @inheritDoc
      */
-    public function prepareSwaggerProperty($modelClass, $attribute, &$property)
+    public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property = array_merge(
-            [
-                'type' => 'number',
-            ],
-            $property
-        );
+        $property->phpType = 'integer';
     }
 
     /**

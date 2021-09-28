@@ -315,16 +315,22 @@ abstract class CrudApiController extends Controller
     public function afterAction($action, $result)
     {
         if ($result instanceof BaseSchema || $result instanceof Model) {
-            if (Yii::$app->request->get('scope') === SearchModel::SCOPE_PERMISSIONS) {
-                $user = Yii::$app->user->identity;
-                $model = $result instanceof BaseSchema ? $result->model : $result;
+            $scopes = [Model::SCOPE_DETAIL];
+            $item = \Yii::$app->siteMap->getActiveItem();
+            if ($item && in_array('admin', $item->pathIds)) {
+                $scopes[] = [Model::SCOPE_ADMIN];
+            }
 
+            $user = Yii::$app->user->identity;
+
+            if (Yii::$app->request->get('scope') === SearchModel::SCOPE_PERMISSIONS) {
+                $model = $result instanceof BaseSchema ? $result->model : $result;
                 $result = array_merge(
-                    $result->toFrontend($this->detailFields(), $user),
+                    $result->toFrontend($this->detailFields(), $user, $scopes),
                     $model->getPermissions($user)
                 );
             } else {
-                $result = $result->toFrontend($this->detailFields());
+                $result = $result->toFrontend($this->detailFields(), $user, $scopes);
             }
         }
 

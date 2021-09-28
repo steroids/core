@@ -152,19 +152,26 @@ class SearchModel extends FormModel
         $schema = $this->fieldsSchema();
         $fields = $fields ?: $this->fields();
 
+        // Detect scopes
+        $scopes = [Model::SCOPE_LIST];
+        $item = \Yii::$app->siteMap->getActiveItem();
+        if ($item && in_array('admin', $item->pathIds)) {
+            $scopes[] = [Model::SCOPE_ADMIN];
+        }
+
         return array_map(
-            function ($model) use ($schema, $fields, $user) {
+            function ($model) use ($schema, $fields, $user, $scopes) {
                 return
                     ($schema
                         ? $this->createSchema($schema, $model)
                         : $model
-                    )->toFrontend($fields, $user);
+                    )->toFrontend($fields, $user, $scopes);
             },
             $this->dataProvider->models
         );
     }
 
-    public function toFrontend($fields = null, $user = null)
+    public function toFrontend($fields = null, $user = null, array $scopes = [])
     {
         $searchModelResponse = $this->prepareResponse();
 

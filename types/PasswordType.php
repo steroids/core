@@ -13,15 +13,10 @@ class PasswordType extends Type
     /**
      * @inheritdoc
      */
-    public function prepareSwaggerProperty($modelClass, $attribute, &$property)
+    public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property = array_merge(
-            [
-                'type' => 'string',
-                'format' => 'password',
-            ],
-            $property
-        );
+        $property->phpType = 'string';
+        $property->format = 'password';
     }
 
     /**

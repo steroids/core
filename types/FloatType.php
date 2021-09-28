@@ -19,14 +19,9 @@ class FloatType extends IntegerType
     /**
      * @inheritdoc
      */
-    public function prepareSwaggerProperty($modelClass, $attribute, &$property)
+    public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property = array_merge(
-            [
-                'type' => 'number',
-            ],
-            $property
-        );
+        $property->phpType = 'float';
     }
 
     /**

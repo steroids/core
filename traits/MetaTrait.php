@@ -2,10 +2,9 @@
 
 namespace steroids\core\traits;
 
+use steroids\auth\UserInterface;
 use steroids\core\base\BaseSchema;
-use steroids\core\base\FormModel;
 use steroids\core\base\Model;
-use yii\base\BaseObject;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 
@@ -50,17 +49,19 @@ trait MetaTrait
     /**
      * @param Model|Model[]|mixed|null $model
      * @param null $fields
+     * @param string[] $scopes
+     * @param UserInterface $user
      * @return array|null
      * @throws InvalidConfigException
      */
-    public static function anyToFrontend($model, $fields = null)
+    public static function anyToFrontend($model, $fields = null, UserInterface $user = null, array $scopes = [])
     {
         $fields = $fields ? (array)$fields : ['*'];
 
         // Detect array
         if (is_array($model)) {
-            return array_map(function($item) use ($fields) {
-                return static::anyToFrontend($item, $fields);
+            return array_map(function($item) use ($fields, $user, $scopes) {
+                return static::anyToFrontend($item, $fields, $user, $scopes);
             }, $model);
         }
 
@@ -79,13 +80,23 @@ trait MetaTrait
             // Syntax: *
             if ($name === '*') {
                 unset($fields[$key]);
-                $fields = array_merge($model->fields(), $fields);
+                $fields = array_merge(
+                    method_exists($model, 'frontendFields')
+                        ? $model->frontendFields($scopes, $user)
+                        : $model->fields(),
+                    $fields
+                );
 
                 if ($model instanceof BaseSchema && $model->model instanceof Model) {
                     $index = array_search('*', $fields);
                     if ($index !== false) {
                         unset($fields[$index]);
-                        $fields = array_merge($fields, $model->model->fields());
+                        $fields = array_merge(
+                            $fields,
+                            method_exists($model->model, 'frontendFields')
+                                ? $model->model->frontendFields($scopes, $user)
+                                : $model->model->fields()
+                        );
                     }
                 }
                 break;
@@ -104,7 +115,10 @@ trait MetaTrait
                 $attribute = substr($name, 0, -2);
                 $subModel = ArrayHelper::getValue($model, $attribute);
                 if ($subModel) {
-                    foreach ($subModel->fields() as $key => $name) {
+                    $subModelFields = method_exists($subModel, 'frontendFields')
+                        ? $subModel->frontendFields($scopes, $user)
+                        : $subModel->fields();
+                    foreach ($subModelFields as $key => $name) {
                         $key = is_int($key) ? $name : $key;
                         $fields[$key] = $attribute . '.' . $name;
                     }
@@ -133,7 +147,7 @@ trait MetaTrait
             // BaseScheme logic
             if (is_string($name) && $item instanceof BaseSchema) {
                 if ($item->canGetProperty($name, true, false)) {
-                    $result[$key] = static::anyToFrontend($item->$name);
+                    $result[$key] = static::anyToFrontend($item->$name, null, $user, $scopes);
                     continue;
                 } else {
                     $item = $item->model;
@@ -142,11 +156,11 @@ trait MetaTrait
 
             // Standard model logic
             if (is_callable($name) && (!is_string($name) || !function_exists($name))) {
-                $result[$key] = static::anyToFrontend(call_user_func($name, $item));
+                $result[$key] = static::anyToFrontend(call_user_func($name, $item), null, $user, $scopes);
             } elseif (is_array($name)) {
-                $result[$key] = static::anyToFrontend(ArrayHelper::getValue($item, $key), $name);
+                $result[$key] = static::anyToFrontend(ArrayHelper::getValue($item, $key), $name, $user, $scopes);
             } else {
-                $result[$key] = static::anyToFrontend(ArrayHelper::getValue($item, $name));
+                $result[$key] = static::anyToFrontend(ArrayHelper::getValue($item, $name), null, $user, $scopes);
             }
         }
         return $result;
@@ -158,10 +172,11 @@ trait MetaTrait
      *
      * @param array|string|null $fields
      * @param Model $user
+     * @param string[] $scopes
      * @return array
      * @throws InvalidConfigException
      */
-    public function toFrontend($fields = null, $user = null)
+    public function toFrontend($fields = null, $user = null, array $scopes = [])
     {
         $self = $this;
         if (method_exists($this, 'createSchema') && method_exists($this, 'fieldsSchema')) {
@@ -171,7 +186,7 @@ trait MetaTrait
             }
         }
 
-        $data = static::anyToFrontend($self, $fields);
+        $data = static::anyToFrontend($self, $fields, $user, $scopes);
         $model = $self instanceof BaseSchema ? $self->model : $self;
 
         if ($user && $model instanceof Model) {

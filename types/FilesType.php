@@ -47,17 +47,10 @@ class FilesType extends RelationType
     /**
      * @inheritdoc
      */
-    public function prepareSwaggerProperty($modelClass, $attribute, &$property)
+    public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property = array_merge(
-            $property,
-            [
-                'type' => 'array',
-                'items' => [
-                    'type' => 'integer',
-                ],
-            ]
-        );
+        $property->phpType = 'integer';
+        $property->isArray = true;
     }
 
     /**

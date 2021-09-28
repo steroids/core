@@ -24,14 +24,9 @@ class BooleanType extends Type
     /**
      * @inheritdoc
      */
-    public function prepareSwaggerProperty($modelClass, $attribute, &$property)
+    public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property = array_merge(
-            $property,
-            [
-                'type' => 'boolean',
-            ]
-        );
+        $property->phpType = 'boolean';
     }
 
     /**

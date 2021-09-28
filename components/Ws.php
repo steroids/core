@@ -63,14 +63,17 @@ class Ws extends Component
     /**
      * @param Model $model
      * @param BaseSchema|array $schemaOrFields
+     * @param string[] $scopes
      * @throws \yii\base\InvalidConfigException
      */
-    public function pushModel($model, $schemaOrFields = null)
+    public function pushModel($model, $schemaOrFields = null, array $scopes = [])
     {
+        $user = \Yii::$app->has('user') ? \Yii::$app->user->identity: null;
+
         $stream = [static::getModelStream($model), $model->primaryKey];
         $data = is_string($schemaOrFields) && is_subclass_of($schemaOrFields, BaseSchema::class)
             ? (new $schemaOrFields(['model' => $model]))->toFrontend()
-            : $model->toFrontend($schemaOrFields);
+            : $model->toFrontend($schemaOrFields, $user, $scopes);
 
         $this->push($stream, 'update', $data);
     }
