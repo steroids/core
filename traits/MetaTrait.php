@@ -7,6 +7,7 @@ use steroids\core\base\BaseSchema;
 use steroids\core\base\Model;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
+use \Exception;
 
 trait MetaTrait
 {
@@ -47,12 +48,31 @@ trait MetaTrait
     }
 
     /**
-     * @param Model|Model[]|mixed|null $model
+     * @param array $data
+     * @param array $scopes
+     * @return array
+     * @throws \Exception
+     */
+    protected static function getFieldsByScopes(array $data, array $scopes): array
+    {
+        // Add default scope
+        array_unshift($scopes, self::SCOPE_DEFAULT);
+
+        $fields = [];
+        foreach ($scopes as $scope) {
+            $fields = array_merge($fields, ArrayHelper::getValue($data, $scope, []));
+        }
+        return $fields;
+    }
+
+    /**
+     * @param $model
      * @param null $fields
-     * @param string[] $scopes
-     * @param UserInterface $user
-     * @return array|null
+     * @param UserInterface|null $user
+     * @param array $scopes
+     * @return array|array[]|null[]|Model[]|\steroids\core\base\Model[][]|null
      * @throws InvalidConfigException
+     * @throws Exception
      */
     public static function anyToFrontend($model, $fields = null, UserInterface $user = null, array $scopes = [])
     {
@@ -60,7 +80,7 @@ trait MetaTrait
 
         // Detect array
         if (is_array($model)) {
-            return array_map(function($item) use ($fields, $user, $scopes) {
+            return array_map(function ($item) use ($fields, $user, $scopes) {
                 return static::anyToFrontend($item, $fields, $user, $scopes);
             }, $model);
         }
@@ -82,7 +102,7 @@ trait MetaTrait
                 unset($fields[$key]);
                 $fields = array_merge(
                     method_exists($model, 'frontendFields')
-                        ? $model->frontendFields($scopes, $user)
+                        ? static::getFieldsByScopes($model->frontendFields($user), $scopes)
                         : $model->fields(),
                     $fields
                 );
@@ -94,7 +114,7 @@ trait MetaTrait
                         $fields = array_merge(
                             $fields,
                             method_exists($model->model, 'frontendFields')
-                                ? $model->model->frontendFields($scopes, $user)
+                                ? static::getFieldsByScopes($model->model->frontendFields($user), $scopes)
                                 : $model->model->fields()
                         );
                     }
@@ -116,7 +136,7 @@ trait MetaTrait
                 $subModel = ArrayHelper::getValue($model, $attribute);
                 if ($subModel) {
                     $subModelFields = method_exists($subModel, 'frontendFields')
-                        ? $subModel->frontendFields($scopes, $user)
+                        ? static::getFieldsByScopes($subModel->frontendFields($user), $scopes)
                         : $subModel->fields();
                     foreach ($subModelFields as $key => $name) {
                         $key = is_int($key) ? $name : $key;
@@ -197,7 +217,7 @@ trait MetaTrait
                 $notPermittedFields = array_diff(array_keys($modelClass::meta()), $canView);
                 if ($notPermittedFields) {
                     $data = array_filter($data,
-                        function($attribute) use ($notPermittedFields) {
+                        function ($attribute) use ($notPermittedFields) {
                             return !in_array($attribute, $notPermittedFields);
                         },
                         ARRAY_FILTER_USE_KEY

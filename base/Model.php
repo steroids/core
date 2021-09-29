@@ -20,6 +20,7 @@ use yii\web\NotFoundHttpException;
  */
 class Model extends ActiveRecord
 {
+    const SCOPE_DEFAULT = 'default';
     const SCOPE_LIST = 'list';
     const SCOPE_FORM = 'form';
     const SCOPE_DETAIL = 'detail';
@@ -103,9 +104,11 @@ class Model extends ActiveRecord
         return $model::primaryKey()[0];
     }
 
-    public function frontendFields(array $scopes = [], UserInterface $user = null)
+    public function frontendFields(UserInterface $user = null)
     {
-        return $this->fields();
+        return [
+            self::SCOPE_DEFAULT => $this->fields(),
+        ];
     }
 
     public function getPermissions($user)
