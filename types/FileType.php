@@ -53,7 +53,7 @@ class FileType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'integer']
+            [$attributeEntity->getName(), 'integer']
         ];
     }
 }

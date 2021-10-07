@@ -35,7 +35,7 @@ class TimeType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'date', 'format' => 'php:H:i:s'],
+            [$attributeEntity->getName(), 'date', 'format' => 'php:H:i:s'],
         ];
     }
 }

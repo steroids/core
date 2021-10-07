@@ -17,7 +17,7 @@ class SizeType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'number'],
+            [$attributeEntity->getName(), 'number'],
         ];
     }
 
@@ -26,6 +26,6 @@ class SizeType extends Type
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'integer';
+        $property->setPhpType('integer');
     }
 }

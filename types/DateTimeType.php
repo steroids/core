@@ -11,8 +11,8 @@ class DateTimeType extends DateType
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'string';
-        $property->format = 'date-time';
+        $property->setPhpType('string');
+        $property->setFormat('date-time');
     }
 
     /**
@@ -29,7 +29,7 @@ class DateTimeType extends DateType
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'date', 'format' => $attributeEntity->format ?: 'php:Y-m-d H:i:s'],
+            [$attributeEntity->getName(), 'date', 'format' => $attributeEntity->getCustomProperty(self::OPTION_FORMAT) ?: 'php:Y-m-d H:i:s'],
         ];
     }
 }

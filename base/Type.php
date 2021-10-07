@@ -2,8 +2,8 @@
 
 namespace steroids\core\base;
 
-use steroids\gii\forms\BackendModelAttributeEntity;
-use steroids\swagger\models\SwaggerProperty;
+use steroids\core\interfaces\IGiiModelAttribute;
+use steroids\core\interfaces\ISwaggerProperty;
 use yii\base\BaseObject;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
@@ -78,7 +78,7 @@ abstract class Type extends BaseObject
     }
 
     /**
-     * @param BackendModelAttributeEntity $attributeEntity
+     * @param IGiiModelAttribute $attributeEntity
      * @return array
      */
     public function getItems($attributeEntity)
@@ -89,27 +89,27 @@ abstract class Type extends BaseObject
     /**
      * @param string $modelClass
      * @param string $attribute
-     * @param SwaggerProperty $property
+     * @param ISwaggerProperty $property
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'string';
+        $property->setPhpType('string');
     }
 
     /**
-     * @param BackendModelAttributeEntity $attributeEntity
+     * @param IGiiModelAttribute $attributeEntity
      * @param string[] $useClasses
      * @return array
      */
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'string'],
+            [$attributeEntity->getName(), 'string'],
         ];
     }
 
     /**
-     * @param BackendModelAttributeEntity $attributeEntity
+     * @param IGiiModelAttribute $attributeEntity
      * @return array
      */
     public function giiBehaviors($attributeEntity)
@@ -118,7 +118,7 @@ abstract class Type extends BaseObject
     }
 
     /**
-     * @param BackendModelAttributeEntity $attributeEntity
+     * @param IGiiModelAttribute $attributeEntity
      * @return string|false
      */
     public function giiDbType($attributeEntity)

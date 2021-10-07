@@ -25,7 +25,7 @@ class IntegerType extends Type
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'integer';
+        $property->setPhpType('integer');
     }
 
     /**
@@ -34,7 +34,7 @@ class IntegerType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'integer'],
+            [$attributeEntity->getName(), 'integer'],
         ];
     }
 

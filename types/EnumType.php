@@ -35,8 +35,10 @@ class EnumType extends Type
         /** @var Enum $enumClass */
         $enumClass = ArrayHelper::getValue($this->getOptions($modelClass, $attribute), self::OPTION_CLASS_NAME);
 
-        $property->phpType = 'string';
-        $property->enum = $enumClass ? $enumClass::getKeys() : null;
+        $property->setPhpType('string');
+        if ($enumClass) {
+            $property->setEnum($enumClass::getKeys());
+        }
     }
 
     /**
@@ -75,7 +77,7 @@ class EnumType extends Type
         $enumClass = $attributeEntity->getCustomProperty(self::OPTION_CLASS_NAME);
         if (!$enumClass) {
             return [
-                [$attributeEntity->name, 'string'],
+                [$attributeEntity->getName(), 'string'],
             ];
         }
 
@@ -83,7 +85,7 @@ class EnumType extends Type
         $useClasses[] = $enumClass;
 
         return [
-            [$attributeEntity->name, 'in', 'range' => new ValueExpression("$shortClassName::getKeys()")],
+            [$attributeEntity->getName(), 'in', 'range' => new ValueExpression("$shortClassName::getKeys()")],
         ];
     }
 

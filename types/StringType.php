@@ -3,7 +3,7 @@
 namespace steroids\core\types;
 
 use steroids\core\base\Type;
-use steroids\gii\models\ValueExpression;
+use steroids\core\base\ValueExpression;
 use steroids\core\validators\WordsValidator;
 use yii\db\Schema;
 use yii\helpers\StringHelper;
@@ -46,14 +46,14 @@ class StringType extends Type
     {
         $length = $attributeEntity->getCustomProperty(self::OPTION_LENGTH);
         $validators = [
-            [$attributeEntity->name, 'string', 'max' => $length ?: 255],
+            [$attributeEntity->getName(), 'string', 'max' => $length ?: 255],
         ];
 
         switch ($attributeEntity->getCustomProperty(self::OPTION_TYPE)) {
             case self::TYPE_WORDS:
                 $wordsValidatorClass = WordsValidator::class;
                 $useClasses[] = $wordsValidatorClass;
-                $validators[] = [$attributeEntity->name, new ValueExpression(StringHelper::basename($wordsValidatorClass) . '::class')];
+                $validators[] = [$attributeEntity->getName(), new ValueExpression(StringHelper::basename($wordsValidatorClass) . '::class')];
                 break;
         }
 

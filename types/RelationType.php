@@ -42,8 +42,8 @@ class RelationType extends Type
     public function giiDbType($attributeEntity)
     {
         $relationName = $attributeEntity->getCustomProperty(self::OPTION_RELATION_NAME);
-        $relation = $attributeEntity->modelEntity->getRelationEntity($relationName);
-        return $relation && $relation->isHasOne ? Schema::TYPE_INTEGER : false;
+        $hasOneRelation = $attributeEntity->isModelHasOneRelationExists($relationName);
+        return $hasOneRelation ? Schema::TYPE_INTEGER : false;
     }
 
     /**
@@ -52,10 +52,10 @@ class RelationType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         $relationName = $attributeEntity->getCustomProperty(self::OPTION_RELATION_NAME);
-        $relation = $attributeEntity->modelEntity->getRelationEntity($relationName);
-        if ($relation && $relation->isHasOne) {
+        $hasOneRelation = $attributeEntity->isModelHasOneRelationExists($relationName);
+        if ($hasOneRelation) {
             return [
-                [$attributeEntity->name, 'integer'],
+                [$attributeEntity->getName(), 'integer'],
             ];
         }
         return false;

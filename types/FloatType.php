@@ -2,7 +2,6 @@
 
 namespace steroids\core\types;
 
-use steroids\gii\forms\BackendModelAttributeEntity;
 use Yii;
 use yii\db\Schema;
 use yii\helpers\ArrayHelper;
@@ -21,16 +20,15 @@ class FloatType extends IntegerType
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'float';
+        $property->setPhpType('float');
     }
 
     /**
-     * @param BackendModelAttributeEntity $attributeEntity
-     * @return string
+     * @inheritDoc
      */
     public function giiDbType($attributeEntity)
     {
-        $scale = ArrayHelper::getValue($attributeEntity->customProperties, self::OPTION_SCALE) ?: 2;
+        $scale = $attributeEntity->getCustomProperty(self::OPTION_SCALE) ?: 2;
         return (string)Yii::$app->db->schema->createColumnSchemaBuilder(Schema::TYPE_DECIMAL, [19, $scale]);
     }
 
@@ -40,7 +38,7 @@ class FloatType extends IntegerType
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'number'],
+            [$attributeEntity->getName(), 'number'],
         ];
     }
 

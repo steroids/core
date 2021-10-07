@@ -26,7 +26,7 @@ class BooleanType extends Type
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'boolean';
+        $property->setPhpType('boolean');
     }
 
     /**
@@ -35,7 +35,7 @@ class BooleanType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, ExtBooleanValidator::class],
+            [$attributeEntity->getName(), ExtBooleanValidator::class],
         ];
     }
 }

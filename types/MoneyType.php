@@ -28,7 +28,7 @@ class MoneyType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'number'],
+            [$attributeEntity->getName(), 'number'],
         ];
     }
 

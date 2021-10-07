@@ -35,7 +35,7 @@ class TextType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'string'],
+            [$attributeEntity->getName(), 'string'],
         ];
     }
 }

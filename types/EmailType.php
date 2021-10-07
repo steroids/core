@@ -12,8 +12,8 @@ class EmailType extends Type
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'string';
-        $property->format = 'email';
+        $property->setPhpType('string');
+        $property->setFormat('email');
     }
 
     /**
@@ -30,8 +30,8 @@ class EmailType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'string', 'max' => 255],
-            [$attributeEntity->name, 'email'],
+            [$attributeEntity->getName(), 'string', 'max' => 255],
+            [$attributeEntity->getName(), 'email'],
         ];
     }
 }

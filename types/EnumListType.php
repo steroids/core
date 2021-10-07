@@ -22,7 +22,7 @@ class EnumListType extends EnumType
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         /** @var Enum $className */
-        $className = $attributeEntity->enumClassName;
+        $className = $attributeEntity->getCustomProperty(self::OPTION_CLASS_NAME);
 
         //TODO return "['in', 'range' => $className::getKeys()]";
 

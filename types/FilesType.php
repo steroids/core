@@ -49,8 +49,8 @@ class FilesType extends RelationType
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'integer';
-        $property->isArray = true;
+        $property->setPhpType('integer');
+        $property->setIsArray(true);
     }
 
     /**
@@ -59,7 +59,7 @@ class FilesType extends RelationType
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'each', 'rule' => ['integer']],
+            [$attributeEntity->getName(), 'each', 'rule' => ['integer']],
         ];
     }
 

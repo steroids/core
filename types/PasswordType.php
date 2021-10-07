@@ -15,8 +15,8 @@ class PasswordType extends Type
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'string';
-        $property->format = 'password';
+        $property->setPhpType('string');
+        $property->setFormat('password');
     }
 
     /**
@@ -33,7 +33,7 @@ class PasswordType extends Type
     public function giiRules($attributeEntity, &$useClasses = [])
     {
         return [
-            [$attributeEntity->name, 'string', 'min' => $this->min, 'max' => $this->max],
+            [$attributeEntity->getName(), 'string', 'min' => $this->min, 'max' => $this->max],
         ];
     }
 }

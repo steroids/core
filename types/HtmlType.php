@@ -22,7 +22,7 @@ class HtmlType extends Type
     {
         // TODO Html validator
         return [
-            [$attributeEntity->name, 'string']
+            [$attributeEntity->getName(), 'string']
         ];
     }
 }

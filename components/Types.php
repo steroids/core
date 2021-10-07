@@ -19,7 +19,6 @@ use steroids\core\types\FileType;
 use steroids\core\types\HtmlType;
 use steroids\core\types\IntegerType;
 use steroids\core\types\PrimaryKeyType;
-use steroids\core\types\RangeType;
 use steroids\core\types\RelationType;
 use steroids\core\types\SizeType;
 use steroids\core\types\StringType;
@@ -45,7 +44,6 @@ use yii\helpers\Html;
  * @property-read HtmlType $html
  * @property-read IntegerType $integer
  * @property-read PrimaryKeyType $primaryKey
- * @property-read RangeType $range
  * @property-read RelationType $relation
  * @property-read SizeType $size
  * @property-read StringType $string
@@ -65,7 +63,6 @@ class Types extends Component
     const HTML = 'html';
     const INTEGER = 'integer';
     const PRIMARY_KEY = 'primaryKey';
-    const RANGE = 'range';
     const RELATION = 'relation';
     const SIZE = 'size';
     const STRING = 'string';

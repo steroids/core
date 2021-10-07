@@ -17,7 +17,7 @@ class PrimaryKeyType extends Type
      */
     public function prepareSwaggerProperty($modelClass, $attribute, $property)
     {
-        $property->phpType = 'integer';
+        $property->setPhpType('integer');
     }
 
     /**
