@@ -56,7 +56,7 @@ trait MetaTrait
     protected static function getFieldsByScopes(array $data, array $scopes): array
     {
         // Add default scope
-        array_unshift($scopes, self::SCOPE_DEFAULT);
+        array_unshift($scopes, Model::SCOPE_DEFAULT);
 
         $fields = [];
         foreach ($scopes as $scope) {
