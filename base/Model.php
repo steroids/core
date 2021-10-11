@@ -200,6 +200,16 @@ class Model extends ActiveRecord
     }
 
     /**
+     * @inheritDoc
+     */
+    public function formName()
+    {
+        // Disable form name by default, because our backend only for REST API
+        // and form widgets not used
+        return '';
+    }
+
+    /**
      * @inheritdoc
      */
     public function load($data, $formName = null)
