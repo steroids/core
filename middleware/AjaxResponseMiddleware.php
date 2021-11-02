@@ -6,7 +6,6 @@ use steroids\core\base\BaseSchema;
 use steroids\core\base\FormModel;
 use steroids\core\base\Model;
 use steroids\core\base\SearchModel;
-use steroids\widgets\ActiveForm;
 use yii\base\ActionEvent;
 use yii\base\BaseObject;
 use yii\data\BaseDataProvider;
@@ -51,9 +50,8 @@ class AjaxResponseMiddleware extends BaseObject
                 || $event->result instanceof \yii\base\Model) {
 
                 // Detect data provider
-                $data = [];
                 if ($event->result instanceof SearchModel || $event->result instanceof BaseSchema) {
-                    $data = $event->result->toFrontend(null, \Yii::$app->user->identity);
+                    $data = Model::anyToFrontend($event->result, null, \Yii::$app->user->identity);
                 } elseif ($event->result instanceof Model || $event->result instanceof FormModel) {
                     if ($event->result->hasErrors()) {
                         $errors = $event->result->getErrors();
@@ -64,7 +62,7 @@ class AjaxResponseMiddleware extends BaseObject
 
                         $data = ['errors' => $errors];
                     } else {
-                        $data = $event->result->toFrontend(null, \Yii::$app->user->identity);
+                        $data = Model::anyToFrontend($event->result,null, \Yii::$app->user->identity);
                     }
                 } elseif ($event->result instanceof BaseDataProvider) {
                     $data = [
@@ -72,8 +70,10 @@ class AjaxResponseMiddleware extends BaseObject
                         'items' => $event->result->models,
                         'total' => $event->result->totalCount,
                     ];
+                } elseif (is_array($event->result)) {
+                    $data = Model::anyToFrontend($event->result, null, \Yii::$app->user->identity);
                 } else {
-                    $data = is_array($event->result) ? $event->result : [];
+                    $data = [];
                 }
 
                 // Ajax redirect
