@@ -5,6 +5,7 @@ namespace steroids\core\traits;
 use steroids\auth\UserInterface;
 use steroids\core\base\BaseSchema;
 use steroids\core\base\Model;
+use steroids\core\base\SearchModel;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use \Exception;
@@ -93,6 +94,10 @@ trait MetaTrait
         // Scalar
         if (!is_object($model)) {
             return $model;
+        }
+
+        if (is_object($model) && $model instanceof SearchModel) {
+            return $model->toFrontend($fields, $user, $scopes);
         }
 
         // Detect *
