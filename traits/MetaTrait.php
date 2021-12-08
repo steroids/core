@@ -160,6 +160,21 @@ trait MetaTrait
                 throw new InvalidConfigException('Wrong fields format for model "' . get_class($model) . '"');
             }
 
+            // Detect scope
+            if (!empty($name) && (is_string($name) || is_array($name))) {
+                $isAllScopes = true;
+                foreach ((array)$name as $scopeName) {
+                    if (strpos($scopeName, Model::SCOPE_PREFIX) !== 0) {
+                        $isAllScopes = false;
+                        break;
+                    }
+                }
+                if ($isAllScopes) {
+                    $scopes = (array)$name;
+                    $name = $key;
+                }
+            }
+
             // Detect path
             if (is_string($name) && strpos($name, '.') !== false) {
                 $parts = explode('.', $name);

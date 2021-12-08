@@ -20,12 +20,13 @@ use yii\web\NotFoundHttpException;
  */
 class Model extends ActiveRecord
 {
-    const SCOPE_DEFAULT = 'default';
-    const SCOPE_LIST = 'list';
-    const SCOPE_FORM = 'form';
-    const SCOPE_DETAIL = 'detail';
-    const SCOPE_DICTIONARY = 'dictionary';
-    const SCOPE_ADMIN = 'admin';
+    const SCOPE_PREFIX = '_scope_';
+    const SCOPE_DEFAULT = self::SCOPE_PREFIX . 'default';
+    const SCOPE_LIST = self::SCOPE_PREFIX . 'list';
+    const SCOPE_FORM = self::SCOPE_PREFIX . 'form';
+    const SCOPE_DETAIL = self::SCOPE_PREFIX . 'detail';
+    const SCOPE_DICTIONARY = self::SCOPE_PREFIX . 'dictionary';
+    const SCOPE_ADMIN = self::SCOPE_PREFIX . 'admin';
 
     use MetaTrait;
     use RelationSaveTrait;
