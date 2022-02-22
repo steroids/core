@@ -77,7 +77,8 @@ trait MetaTrait
      */
     public static function anyToFrontend($model, $fields = null, UserInterface $user = null, array $scopes = [])
     {
-        $fields = $fields ? (array)$fields : ['*'];
+        $defaultField = $model instanceof SearchModel ? null : ['*'];
+        $fields = $fields ? (array)$fields : $defaultField;
 
         // Detect array
         if (is_array($model)) {
@@ -96,7 +97,7 @@ trait MetaTrait
             return $model;
         }
 
-        if (is_object($model) && $model instanceof SearchModel) {
+        if ($model instanceof SearchModel || self::hasSchema($model)) {
             return $model->toFrontend($fields, $user, $scopes);
         }
 
@@ -219,7 +220,7 @@ trait MetaTrait
     public function toFrontend($fields = null, $user = null, array $scopes = [])
     {
         $self = $this;
-        if (method_exists($this, 'createSchema') && method_exists($this, 'fieldsSchema')) {
+        if (self::hasSchema($this)) {
             $schema = $this->fieldsSchema();
             if ($schema) {
                 $self = $this->createSchema($schema, $this);
@@ -247,5 +248,15 @@ trait MetaTrait
         }
 
         return $data;
+    }
+
+    /**
+     * @return bool
+     */
+    private static function hasSchema($object)
+    {
+        return method_exists($object, 'createSchema')
+            && method_exists($object, 'fieldsSchema')
+            && $object->fieldsSchema();
     }
 }
