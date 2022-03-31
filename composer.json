@@ -7,7 +7,7 @@
         "ext-mbstring": "*",
         "ext-curl": "*",
         "lib-pcre": "*",
-        "yiisoft/yii2": "2.0.40",
+        "yiisoft/yii2": "2.0.45",
         "yiisoft/yii2-swiftmailer": "^2.1",
         "yiisoft/yii2-debug": "^2.1",
         "notamedia/yii2-sentry": "^1.3",
