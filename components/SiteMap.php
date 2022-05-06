@@ -46,7 +46,7 @@ class SiteMap extends Component
 
             // Detect verb
             $verb = null;
-            if (preg_match('/^([a-z,]+) .+/i', $urlRule, $match)) {
+            if ($urlRule && preg_match('/^([a-z,]+) .+/i', $urlRule, $match)) {
                 $verb = array_intersect(explode(',', strtoupper($match[1])), static::VERBS);
                 $urlRule = str_replace($match[1] . ' ', '', $urlRule);
             }
