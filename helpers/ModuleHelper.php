@@ -42,29 +42,40 @@ class ModuleHelper
         return static::$_modulesCache[$rootDir];
     }
 
-    public static function findAppModuleClasses($module = null)
+    public static function findAppModuleClasses()
     {
-        if (!$module) {
-            $module = \Yii::$app;
-        }
-
         $moduleClasses = [];
-        foreach ($module->getModules() as $module) {
-            $children = [];
-            if (is_object($module)) {
-                $moduleClasses[] = $module::className();
-                $children = $module->getModules();
-            } elseif (is_array($module) && isset($module['class'])) {
-                $moduleClasses[] = $module['class'];
-                $children = ArrayHelper::getValue($module, 'modules', []);
-            } elseif (is_string($module)) {
-                $moduleClasses[] = $module;
-            }
-
-            foreach ($children as $subModule) {
-                $moduleClasses[] = [...$moduleClasses, static::findAppModuleClasses($subModule)];
-            }
+        foreach (\Yii::$app->getModules() as $module) {
+            $moduleClasses = [...$moduleClasses, ...static::getModuleClassesList($module)];
         }
+        return $moduleClasses;
+    }
+
+    /**
+     * Get classes list of module and its sub modules
+     * @param $module
+     * @return array
+     * @throws \Exception
+     */
+    public static function getModuleClassesList($module)
+    {
+        $moduleClasses = [];
+        $children = [];
+        if (is_object($module)) {
+            $moduleClasses[] = $module::className();
+            $children = $module->getModules();
+        } elseif (is_array($module) && isset($module['class'])) {
+            $moduleClasses[] = $module['class'];
+            $children = ArrayHelper::getValue($module, 'modules', []);
+        } elseif (is_string($module)) {
+            $moduleClasses[] = $module;
+        }
+
+        foreach ($children as $subModule) {
+            $subModuleClasses = static::getModuleClassesList($subModule);
+            $moduleClasses = [...$moduleClasses, ...$subModuleClasses];
+        }
+
         return $moduleClasses;
     }
 
