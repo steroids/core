@@ -68,7 +68,7 @@ class AjaxResponseMiddleware extends BaseObject
                 } elseif ($event->result instanceof BaseDataProvider) {
                     $data = [
                         'meta' => null,
-                        'items' => $event->result->models,
+                        'items' => array_values($event->result->models),
                         'total' => $event->result->totalCount,
                     ];
                 } elseif (is_array($event->result)) {
