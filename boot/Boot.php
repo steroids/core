@@ -132,7 +132,7 @@ class Boot
                     'translations' => [
                         'steroids*' => [
                             'class' => 'yii\i18n\PhpMessageSource',
-                            'basePath' => '@steroids/messages',
+                            'basePath' => '@steroids/core/messages',
                             'sourceLanguage' => 'ru',
                         ]
                     ],

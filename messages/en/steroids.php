@@ -147,4 +147,5 @@ return [
     'Я не робот' => 'I\'m not a bot',
     'Язык' => 'Language',
     'пользовательского соглашения' => 'user agreement',
+    'Проверка на робота не пройдена' => 'The robot check has not been passed',
 ];
