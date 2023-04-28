@@ -5,6 +5,7 @@ namespace steroids\core\traits;
 use steroids\core\base\FormModel;
 use steroids\core\base\Model;
 use yii\base\Exception;
+use yii\base\InvalidArgumentException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -12,6 +13,24 @@ use yii\helpers\ArrayHelper;
 trait RelationSaveTrait
 {
     private $_listenRelations = [];
+
+    /**
+     * @param string|array $relationName
+     * @throws \Exception
+     */
+    public function isRelationListened($relationName): bool
+    {
+        if (is_array($relationName)) {
+            $path = implode('.children.', $relationName);
+        }
+        elseif (is_string($relationName)) {
+            $path = str_replace('.', '.children.', $relationName);
+        } else {
+            throw new InvalidArgumentException('relation name must be array or string');
+        }
+
+        return (bool)ArrayHelper::getValue($this->_listenRelations, $path);
+    }
 
     /**
      * @param string|array $relationNames
