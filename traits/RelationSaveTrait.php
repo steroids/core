@@ -271,6 +271,7 @@ trait RelationSaveTrait
     protected function saveRelationIds()
     {
         foreach ($this->_listenRelations as $relationName => $params) {
+
             $isIds = ArrayHelper::getValue($params, 'isIds');
             if (!$isIds) {
                 continue;
@@ -293,10 +294,16 @@ trait RelationSaveTrait
                 $modelClass = $relation->via[1]->modelClass;
                 $table = $modelClass::tableName();
                 $ownAttribute = key($relation->via[1]->link);
+                $externalAttributesCondition = $relation->via[1]->on ?: [];
             } else {
                 // viaTable
                 $table = $relation->via->from[0];
                 $ownAttribute = key($relation->via->link);
+                $externalAttributesCondition = $relation->via->on ?: [];
+            }
+
+            if (!$this->isValidExternalAttributesCondition($externalAttributesCondition)) {
+                throw new Exception("Invalid onCondition for save relation. Use [attribute => value] condition array only");
             }
 
             $relatedAttribute = reset($relation->link);
@@ -308,26 +315,26 @@ trait RelationSaveTrait
                 static::getDb()->createCommand()->delete($table, [
                     $ownAttribute => $this->primaryKey,
                     $relatedAttribute => array_values(array_diff($prevIds, $nextIds)),
+                    ...$externalAttributesCondition,
                 ])->execute();
             }
 
             // Insert
-            $this->insertRelationsByIds($table, $ownAttribute, $relatedAttribute, $nextIds, $prevIds);
+            $this->insertRelationsByIds($table, $ownAttribute, $relatedAttribute, $externalAttributesCondition, $nextIds, $prevIds);
         }
     }
 
-    protected function insertRelationsByIds($table, $ownAttribute, $relatedAttribute, $nextIds, $prevIds)
+    protected function insertRelationsByIds($table, $ownAttribute, $relatedAttribute, $externalAttributesCondition, $nextIds, $prevIds)
     {
         static::getDb()
             ->createCommand()
             ->batchInsert(
                 $table,
-                [$ownAttribute, $relatedAttribute],
-                array_map(function ($id) {
-                    return [$this->primaryKey, $id];
+                [$ownAttribute, $relatedAttribute, ...array_keys($externalAttributesCondition)],
+                array_map(function ($id) use ($externalAttributesCondition) {
+                    return [$this->primaryKey, $id, ...$externalAttributesCondition];
                 }, array_values(array_diff($nextIds, $prevIds)))
-            )
-            ->execute();
+            )->execute();
     }
 
     protected function saveRelationDataBeforeSelf()
@@ -519,11 +526,25 @@ trait RelationSaveTrait
         // Typecast
         $column = $relatedModel::getTableSchema()->getColumn($primaryKey);
         return array_map(
-            function($value) use ($column) {
+            function ($value) use ($column) {
                 return $column->phpTypecast($value);
             },
             $ids
         );
     }
 
+    private function isValidExternalAttributesCondition($condition)
+    {
+        if (!is_array($condition)) {
+            return false;
+        }
+
+        foreach ($condition as $key => $value) {
+            if (!is_string($key) || is_array($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
