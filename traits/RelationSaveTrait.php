@@ -49,16 +49,21 @@ trait RelationSaveTrait
 
         $this->listenRelation($relationNames, true);
 
-        // Fetch ids from database
+        $this->fetchRelationIds($relationNames);
+    }
+
+    public function fetchRelationIds($relationNames)
+    {
+        $relationNames = (array)$relationNames;
         foreach ($relationNames as $path) {
             if (!is_string($path)) {
                 continue;
             }
 
             $names = explode('.', $path);
-            $relationName = array_shift($names);
+            $relationName = array_pop($names);
             $model = count($names) > 0 ? ArrayHelper::getValue($this, $names) : $this;
-            if ($model && $model instanceof Model) {
+            if ($model instanceof Model) {
                 $idsProperty = $this->getIdsAttributeByRelationName($relationName);
                 $model->$idsProperty = $model->getRelationIds($relationName);
             }
