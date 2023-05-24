@@ -317,11 +317,12 @@ trait RelationSaveTrait
 
             if (!$this->isNewRecord) {
                 // Delete
-                static::getDb()->createCommand()->delete($table, [
+                static::getDb()->createCommand()->delete($table, array_merge([
                     $ownAttribute => $this->primaryKey,
                     $relatedAttribute => array_values(array_diff($prevIds, $nextIds)),
-                    ...$externalAttributesCondition,
-                ])->execute();
+                ],
+                    $externalAttributesCondition
+                ))->execute();
             }
 
             // Insert
@@ -337,7 +338,7 @@ trait RelationSaveTrait
                 $table,
                 [$ownAttribute, $relatedAttribute, ...array_keys($externalAttributesCondition)],
                 array_map(function ($id) use ($externalAttributesCondition) {
-                    return [$this->primaryKey, $id, ...$externalAttributesCondition];
+                    return [$this->primaryKey, $id, ...array_values($externalAttributesCondition)];
                 }, array_values(array_diff($nextIds, $prevIds)))
             )->execute();
     }
